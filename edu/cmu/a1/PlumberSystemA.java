@@ -1,5 +1,6 @@
 package edu.cmu.a1;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
@@ -30,18 +31,26 @@ public class PlumberSystemA {
 		recordDef.addFieldDefinition(005, Double.TYPE, "Attitude");
 
 
-		FileSource sourceFilter = new FileSource(recordDef, "file.dat");
+		FileSource sourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002});
-		FileOutputStream fileOutputStream = new FileOutputStream("resources/out.dat");
+		FileOutputStream fileOutputStream = new FileOutputStream("resources"+File.separator+"out.dat");
 		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream);
 
-		FToC.Connect(sourceFilter, OUTPUT, INPUT);
-		ftTom.Connect(FToC, OUTPUT, INPUT);
-		fieldFilter.Connect(FToC, OUTPUT, INPUT);
-		sinkFilter.Connect(fieldFilter, OUTPUT, INPUT);
+//		FToC.Connect(sourceFilter, 1, 2);
+//		ftTom.Connect(FToC, 3, 4);
+//		fieldFilter.Connect(FToC, 5, 6);
+//		sinkFilter.Connect(fieldFilter, 7, 8);
+		
+		sinkFilter.Connect(sourceFilter, 1, 2);
 
+		sourceFilter.start();
+//		FToC.start();
+//		ftTom.start();
+//		fieldFilter.start();
+		sinkFilter.start();
+		
 	}
 
 	/**

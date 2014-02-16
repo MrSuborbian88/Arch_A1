@@ -1,6 +1,7 @@
 package edu.cmu.a1.base;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class RecordDefinition {
 
@@ -40,5 +41,9 @@ public class RecordDefinition {
 			return records.get(fieldID).title;
 		else
 			return null;
+	}
+	public Integer[] getFieldCodes() {
+		Set<Integer> keys = records.keySet();
+		return keys.toArray(new Integer[keys.size()]);
 	}
 }

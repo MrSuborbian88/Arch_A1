@@ -20,25 +20,25 @@ package edu.cmu.a1.filter;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-// note we must add this here since we use BufferedReader class to read from the keyboard
 
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.RecordDefinition;
+// note we must add this here since we use BufferedReader class to read from the keyboard
 
 public class FileSource extends FilterFrameworkExtended
 {
+	private String fileName;  	// Input data file.
 	public FileSource(RecordDefinition recordDef, String Filepath) {
 		// TODO Auto-generated constructor stub
 		super(recordDef);
+		this.fileName = Filepath;
+		
 	}
 
 	public void run()
     {
-		String filePath = /*".."/File.separator+*/"DataSets"+File.separator;
-		String fileName = filePath+"FlightData.dat";	// Input data file.
 		int bytesread = 0;					// Number of bytes read from the input file.
 		int byteswritten = 0;				// Number of bytes written to the stream.
 		DataInputStream in = null;			// File stream reference.
@@ -62,11 +62,10 @@ public class FileSource extends FilterFrameworkExtended
 			{
 				databyte = in.readByte();
 				bytesread++;
-				WriteFilterOutputPort(databyte);
+				for(Integer port : outputsMap.keySet())
+					WriteFilterOutputPort(databyte,outputsMap.get(port));
 				byteswritten++;
-
 			} // while
-
 		} //try
 
 		/***********************************************************************************
