@@ -1,5 +1,6 @@
 package edu.cmu.a1.base;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -44,6 +45,11 @@ public class RecordDefinition {
 	}
 	public Integer[] getFieldCodes() {
 		Set<Integer> keys = records.keySet();
-		return keys.toArray(new Integer[keys.size()]);
+		Integer[] codes = keys.toArray(new Integer[keys.size()]);
+		Arrays.sort(codes);
+		return codes;
+	}
+	public boolean hasFieldCode(Integer fieldID) {
+		return records.containsKey(fieldID);
 	}
 }

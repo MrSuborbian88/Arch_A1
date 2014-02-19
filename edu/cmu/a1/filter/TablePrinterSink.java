@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import edu.cmu.a1.base.FilterFrameworkExtended;
+import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
 
 public class TablePrinterSink extends FilterFrameworkExtended {
@@ -55,7 +56,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				// that it is IdLength long. So we first decommutate the ID bytes.
 					 ****************************************************************************/
 
-
+					/*
 					Integer idcode = readInt(portID);
 					for(Integer code : codes) {
 						if(idcode == code) {
@@ -80,8 +81,11 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 						}
 						fileOutputStream.flush();
 					}
-
-
+				*/
+				Record r = readNextRecord(portID);
+				System.out.println(r);
+				writeRecordToFile(r);
+				fileOutputStream.flush();
 				} // try
 
 				/*******************************************************************************
@@ -106,6 +110,36 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 			} // while
 
 	} // run
+	
+	private void writeIntegerToFile(Integer value) throws IOException {
+		for (byte datum : ByteBuffer.allocate(4).putInt(value).array())
+			fileOutputStream.write(datum);	}
+	private void writeLongToFile(Long value) throws IOException {
+		for (byte datum : ByteBuffer.allocate(8).putLong(value).array())
+			fileOutputStream.write(datum);
+	}
+	private void writeDoubleToFile(Double value) throws IOException {
+		for (byte datum : ByteBuffer.allocate(8).putDouble(value).array())
+			fileOutputStream.write(datum);
+	}
+	
+	private void writeRecordToFile(Record record) throws IOException  {
+		
+		for(Integer fieldID : record.getCodes())
+		{
+			Class<?> type = this.recordDefinition.getFieldType(fieldID);
+			writeIntegerToFile(fieldID);
+			if(type == Integer.TYPE)
+				writeIntegerToFile((Integer) record.getValueByCode(fieldID));
+			else if(type == Long.TYPE)
+				writeLongToFile((Long) record.getValueByCode(fieldID));
+			else if(type == Double.TYPE)
+				writeDoubleToFile((Double) record.getValueByCode(fieldID));
+			else //Default behavior?
+				writeDoubleToFile((Double) record.getValueByCode(fieldID));
+		}
+
+	}
 	/**
 	 * @param args
 	 */
