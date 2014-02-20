@@ -50,7 +50,7 @@ public class FieldFilter extends FilterFrameworkExtended{
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
-		System.out.print( "\n" + this.getName() + "::Middle Reading ");
+//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
 		while (true)
 		{

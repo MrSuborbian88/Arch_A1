@@ -25,8 +25,8 @@ public class DistanceConverter extends FilterFrameworkExtended {
 			meters = ConvertFeetWhichIsLeftoverImperialNonsenseToTheAwesomeMetricSystemMeters(feet);
 			
 			r.setValueByCode(ALTITUDE_FIELDID, meters);
-			System.out.println("F:" + feet);
-			System.out.println("M:" + meters);
+//			System.out.println("F:" + feet);
+//			System.out.println("M:" + meters);
 		} catch (IllegalArgumentException e) {
 			//No Temperature
 		}
@@ -46,7 +46,7 @@ public class DistanceConverter extends FilterFrameworkExtended {
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
-		System.out.print( "\n" + this.getName() + "::Middle Reading ");
+//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
 		while (true)
 		{

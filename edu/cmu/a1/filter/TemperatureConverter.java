@@ -23,8 +23,8 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 			celsius = ConvertFahrenheitWhichIsADumbScaleAnywayToCelsiusWhichIsOnlySlightlyBetterWhenYouReallyShouldAllBeUsingKelvinBecauseISaySo(fahrenheit);
 
 			r.setValueByCode(TEMPERATURE_FIELDID, celsius);
-			System.out.println("F:" + fahrenheit);
-			System.out.println("C:" + celsius);
+//			System.out.println("F:" + fahrenheit);
+//			System.out.println("C:" + celsius);
 		} catch (IllegalArgumentException e) {
 			//No Temperature
 		}
@@ -45,7 +45,7 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
-		System.out.print( "\n" + this.getName() + "::Middle Reading ");
+//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
 		while (true)
 		{
