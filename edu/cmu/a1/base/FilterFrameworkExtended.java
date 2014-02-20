@@ -93,17 +93,25 @@ public class FilterFrameworkExtended extends FilterFramework
 		return;
 
 	} // WriteFilterPort
-
+	private boolean first = true;
 	public Record readNextRecord(Integer portID) throws IOException, EndOfStreamException {
 		Record record = new Record(this.recordDefinition);
 
+
 		int fieldID = -1;
-		while(fieldID != 0)
-			fieldID = readInt(portID);
+		//Search for first 0
+		if(first) {
+			while(fieldID != 0)
+				fieldID = readInt(portID);
+			first = false;
+		}
+		else
+			//Assume we stopped reading 
+			fieldID = 0;
 		do 
 		{
 
-//			this.recordDefinition.getFieldType(fieldID);
+			//			this.recordDefinition.getFieldType(fieldID);
 			if(this.recordDefinition.hasFieldCode(fieldID))
 			{
 				Class<?> type = this.recordDefinition.getFieldType(fieldID);
@@ -116,31 +124,41 @@ public class FilterFrameworkExtended extends FilterFramework
 				else //Default behavior?
 					record.setValueByCode(fieldID, readDouble(portID));
 			}
-			inputsMap.get(portID).mark(4);
-			fieldID = readInt(portID);			
+			//Mark reset not supported by PipedInputStream
+			//inputsMap.get(portID).mark(1024);
+			fieldID = readInt(portID);
 		} while(fieldID != 0);
-		//
+		/*
 		try {
 		inputsMap.get(portID).reset();
 		} catch(IOException e) {
+			System.out.println(e.getMessage());
 			//Could not reset...
 		}
+		 */
 		return record;
 	}
 	public void writeRecord(Integer portID, Record record)  {
-		
+
 		for(Integer fieldID : record.getCodes())
 		{
-			Class<?> type = this.recordDefinition.getFieldType(fieldID);
-			writeField(portID,fieldID);
-			if(type == Integer.TYPE)
-				writeField(portID,(Integer) record.getValueByCode(fieldID));
-			else if(type == Long.TYPE)
-				writeField(portID,(Long) record.getValueByCode(fieldID));
-			else if(type == Double.TYPE)
-				writeField(portID,(Double) record.getValueByCode(fieldID));
-			else //Default behavior?
-				writeField(portID,(Double) record.getValueByCode(fieldID));
+
+			try {
+				Class<?> type = this.recordDefinition.getFieldType(fieldID);
+				Object value = record.getValueByCode(fieldID);
+				
+				writeField(portID,fieldID);
+				if(type == Integer.TYPE)
+					writeField(portID,(Integer) value);
+				else if(type == Long.TYPE)
+					writeField(portID,(Long) value);
+				else if(type == Double.TYPE)
+					writeField(portID,(Double) value);
+				else //Default behavior?
+					writeField(portID,(Double) value);
+			} catch (IllegalArgumentException e) {
+				//Value not found in Record object, don't write
+			}
 		}
 
 	}
@@ -420,6 +438,34 @@ public class FilterFrameworkExtended extends FilterFramework
 				in.close();
 			for(PipedOutputStream out : outputsMap.values())
 				out.close();
+
+		}
+		catch( Exception Error )
+		{
+			System.out.println( "\n" + this.getName() + " ClosePorts error::" + Error );
+
+		} // catch
+
+	} // ClosePorts
+	protected void ClosePort(Integer portID)
+	{
+		try
+		{
+			if(this.inputsMap.containsKey(portID))
+				this.inputsMap.get(portID).close();
+
+			this.inputsMap.get(portID).available();
+
+		}
+		catch( Exception Error )
+		{
+			System.out.println( "\n" + this.getName() + " ClosePorts error::" + Error );
+
+		} // catch
+		try
+		{
+			if(this.outputsMap.containsKey(portID))
+				this.outputsMap.get(portID).close();
 
 		}
 		catch( Exception Error )

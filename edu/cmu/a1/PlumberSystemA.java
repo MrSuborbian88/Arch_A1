@@ -38,17 +38,17 @@ public class PlumberSystemA {
 		FileOutputStream fileOutputStream = new FileOutputStream("resources"+File.separator+"out.dat");
 		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream);
 
-//		FToC.Connect(sourceFilter, 1, 2);
-//		ftTom.Connect(FToC, 3, 4);
-//		fieldFilter.Connect(FToC, 5, 6);
+		FToC.Connect(sourceFilter, 1, 2);
+		ftTom.Connect(FToC, 2, 3);
+		fieldFilter.Connect(ftTom, 3, 4);
 //		sinkFilter.Connect(fieldFilter, 7, 8);
 		
-		sinkFilter.Connect(sourceFilter, 1, 2);
+		sinkFilter.Connect(fieldFilter, 5, 6);
 
 		sourceFilter.start();
-//		FToC.start();
-//		ftTom.start();
-//		fieldFilter.start();
+		FToC.start();
+		ftTom.start();
+		fieldFilter.start();
 		sinkFilter.start();
 		
 	}

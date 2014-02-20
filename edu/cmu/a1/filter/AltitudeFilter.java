@@ -10,8 +10,6 @@ public class AltitudeFilter extends FilterFrameworkExtended {
 		super(recordDefinition);
 		//TODO
 	}
-	
-	
 	/**
 	 * @param args
 	 */

@@ -127,16 +127,23 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		
 		for(Integer fieldID : record.getCodes())
 		{
-			Class<?> type = this.recordDefinition.getFieldType(fieldID);
-			writeIntegerToFile(fieldID);
-			if(type == Integer.TYPE)
-				writeIntegerToFile((Integer) record.getValueByCode(fieldID));
-			else if(type == Long.TYPE)
-				writeLongToFile((Long) record.getValueByCode(fieldID));
-			else if(type == Double.TYPE)
-				writeDoubleToFile((Double) record.getValueByCode(fieldID));
-			else //Default behavior?
-				writeDoubleToFile((Double) record.getValueByCode(fieldID));
+			try {
+				Class<?> type = this.recordDefinition.getFieldType(fieldID);
+				Object value = record.getValueByCode(fieldID);
+				
+				writeIntegerToFile(fieldID);
+				if(type == Integer.TYPE)
+					writeIntegerToFile((Integer) value);
+				else if(type == Long.TYPE)
+					writeLongToFile((Long) value);
+				else if(type == Double.TYPE)
+					writeDoubleToFile((Double) value);
+				else //Default behavior?
+					writeDoubleToFile((Double) value);
+			} catch (IllegalArgumentException e) {
+				//Value not found in Record object, don't write
+			}
+			
 		}
 
 	}
