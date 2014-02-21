@@ -435,9 +435,13 @@ public class FilterFrameworkExtended extends FilterFramework
 		try
 		{
 			for(PipedInputStream in : inputsMap.values())
+			{
 				in.close();
+			}
+			inputsMap.clear();
 			for(PipedOutputStream out : outputsMap.values())
 				out.close();
+			outputsMap.clear();
 
 		}
 		catch( Exception Error )
@@ -452,10 +456,10 @@ public class FilterFrameworkExtended extends FilterFramework
 		try
 		{
 			if(this.inputsMap.containsKey(portID))
+			{
 				this.inputsMap.get(portID).close();
-
-			this.inputsMap.get(portID).available();
-
+				this.inputsMap.remove(portID);
+			}
 		}
 		catch( Exception Error )
 		{
@@ -465,7 +469,10 @@ public class FilterFrameworkExtended extends FilterFramework
 		try
 		{
 			if(this.outputsMap.containsKey(portID))
+			{
 				this.outputsMap.get(portID).close();
+				this.outputsMap.remove(portID);
+			}
 
 		}
 		catch( Exception Error )

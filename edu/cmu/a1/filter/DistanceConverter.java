@@ -5,15 +5,14 @@ import java.io.IOException;
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
-import edu.cmu.a1.base.FilterFramework.EndOfStreamException;
 
 public class DistanceConverter extends FilterFrameworkExtended {
 
 	public DistanceConverter(RecordDefinition recordDefinition, Integer FieldID) {
 		super(recordDefinition);
-		//TODO
+		ALTITUDE_FIELDID = FieldID;
 	}
-	private static final Integer ALTITUDE_FIELDID = 2;
+	private Integer ALTITUDE_FIELDID = 2;
 
 	public void DoInnerWork(Record r )
 	{

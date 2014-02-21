@@ -15,16 +15,18 @@ public class PressureFilter extends FilterFrameworkExtended {
 	private boolean writeQueue = false;
 	private boolean first = true;
 	private Integer wildPort;
-	private Integer normalPort;
+	private Integer WildIndicatorFieldId;
 	
 	private Double WILDPOINT = 1.0;
 	private Double UNWILDPOINT = 0.0;
 
-	public PressureFilter(RecordDefinition recordDefinition, Integer FieldID, Integer WildIndicatorFieldId)
+	public PressureFilter(RecordDefinition recordDefinition, Integer FieldID, Integer WildIndicatorPortId )
 	{
 		super(recordDefinition);
-		this.normalPort=FieldID;
-		this.wildPort=WildIndicatorFieldId;
+		this.PRESSURE_ID=FieldID;
+		this.wildPort=WildIndicatorPortId;
+		this.WILD_ID = WildIndicatorPortId;
+
 		this.backlog = new ArrayList<Record>();
 	}
 	public void DoInnerWork(Record record )
@@ -32,12 +34,12 @@ public class PressureFilter extends FilterFrameworkExtended {
 		try {
 			
 			double current_value = (Double) record.getValueByCode(PRESSURE_ID);
-			System.out.println(current_value);
 			if(current_value < 0)
 			{
 				writeQueue = false;
 				record.setValueByCode(WILD_ID, WILDPOINT);
 				writeRecord(this.wildPort,record);
+
 			} else if(previous_value >= 0 && Math.abs(current_value-previous_value) > 10)
 			{
 				writeQueue = false;

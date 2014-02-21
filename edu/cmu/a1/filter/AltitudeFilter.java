@@ -1,8 +1,6 @@
 package edu.cmu.a1.filter;
 
-import java.util.Queue;
-
-import com.sun.jmx.remote.internal.ArrayQueue;
+import java.io.IOException;
 
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
@@ -10,61 +8,88 @@ import edu.cmu.a1.base.RecordDefinition;
 
 public class AltitudeFilter extends FilterFrameworkExtended {
 
-	private Integer ALTITUDE_ID = 3;
-	private Integer WILD_ID = 6;
+	private Integer ALTITUDE_ID = 2;
+	private Integer WILD_ID = 7;
 	private Double previous_value = -1.0;
-	private ArrayQueue<Record> backlog;
-	private boolean writeQueue = false;
-	private boolean first = true;
-	public AltitudeFilter(RecordDefinition recordDefinition, Integer FieldID, Integer WildIndicatorFieldId)
+	private Integer wildPort;
+
+	private Double WILDPOINT = 1.0;
+	private Double UNWILDPOINT = 0.0;
+
+	public AltitudeFilter(RecordDefinition recordDefinition, Integer FieldID, Integer WildIndicatorPortId)
 	{
 		super(recordDefinition);
 		this.ALTITUDE_ID=FieldID;
-		this.WILD_ID=WildIndicatorFieldId;
-		this.backlog = new ArrayQueue<Record>(1024*32);
+		this.WILD_ID=WildIndicatorPortId;
+		this.wildPort=WildIndicatorPortId;
 	}
-	public void DoInnerWork(Record record )
+	public boolean DoInnerWork(Record record )
 	{
 		try {
-			
-			double current_value = (Double) record.getValueByCode(ALTITUDE_ID);
-			if(current_value < 0)
+
+			Double current_value = (Double) record.getValueByCode(ALTITUDE_ID);
+			current_value = (Double) record.getValueByCode(002);
+
+			if(current_value >= 10000)
 			{
-				writeQueue = false;
-				record.setValueByCode(WILD_ID, 1);
-			} else if(previous_value >= 0 && Math.abs(current_value-previous_value) > 10)
-			{
-				writeQueue = false;
-				record.setValueByCode(WILD_ID, 1);
-			} else {
-				record.setValueByCode(WILD_ID, 0);
-				if(this.backlog.size() > 0) {
-					double step = current_value - previous_value / (backlog.size() + 1);
-					
-					for(Record r : backlog) {
-						previous_value += step;
-						r.setValueByCode(ALTITUDE_ID, previous_value);
-					}
-					
-				}
-				
-				writeQueue = true;
-				
-				previous_value = current_value;
+				record.setValueByCode(WILD_ID, UNWILDPOINT);
+				return true;
 			}
-			
-			backlog.add(record);
+
 		} catch (IllegalArgumentException e) {
 			//No Altitude
 		}
+		record.setValueByCode(WILD_ID, WILDPOINT);
+		return false;
 	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public void run()
+	{
 
-	}
 
+		int bytesread = 0;					// Number of bytes read from the input file.
+		int byteswritten = 0;				// Number of bytes written to the stream.
+		byte databyte = 0;					// The byte of data read from the file
+
+		// Next we write a message to the terminal to let the world know we are alive...
+
+		//	System.out.print( "\n" + this.getName() + "::Middle Reading ");
+
+		while (true)
+		{
+			/*************************************************************
+			 *	Here we read a byte and write a byte
+			 *************************************************************/
+			for(Integer portID : this.inputsMap.keySet()) {
+				try
+				{
+					Record record = readNextRecord(portID);
+					boolean greaterthan10k = DoInnerWork(record);
+					if(greaterthan10k)
+					{
+						for(Integer outID : this.outputsMap.keySet())
+							if(outID != this.wildPort)
+								writeRecord(outID,record);
+					}
+					else
+					{
+						writeRecord(this.wildPort,record);
+					}
+
+				} // try
+
+				catch (EndOfStreamException e)
+				{
+					ClosePort(portID);
+					//					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+					break;
+
+				} // catch
+				catch (IOException e) {					// TODO Auto-generated catch block
+					ClosePort(portID);
+				}
+			}
+
+		} // while
+
+	} // run	
 }

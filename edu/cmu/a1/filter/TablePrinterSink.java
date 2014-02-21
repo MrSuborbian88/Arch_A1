@@ -14,7 +14,6 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 	private FileOutputStream fileOutputStream;
 	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream) {
-		// TODO Auto-generated constructor stub
 		super(recordDefinition);
 		this.fileOutputStream = fileOutputStream;
 	}

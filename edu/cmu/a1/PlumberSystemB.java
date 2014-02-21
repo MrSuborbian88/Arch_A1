@@ -16,7 +16,7 @@ public class PlumberSystemB {
 
 	private static final Integer OUTPUT = 1;
 	private static final Integer INPUT = 2;
-	private static final Integer WILD_OUTPUT = 3;
+	private static final Integer WILD_OUTPUT = 6;
 
 	public PlumberSystemB() {
 	}
@@ -58,6 +58,8 @@ public class PlumberSystemB {
 		pressureFilter.start();
 		fieldFilter.start();
 		sinkPrimary.start();
+		sinkWild.start();
+		
 	}
 
 	/**
