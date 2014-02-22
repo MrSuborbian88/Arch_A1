@@ -150,12 +150,13 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				 * We search to see if there are wild pressure points, and if so we replace them with asterisks
 				 **********************************************************************************************/
 				else if (fieldID == 3) {
-					String pressure_string = value.toString();
+					String pressure_string = String.format("%.5f", value);
 					for (Integer ids : record.getCodes()) {
 					    if (ids.equals(6)) {
 					    	
 					    	Object isWild = record.getValueByCode(6);
 					    	String pressure_type = record.getTitleByCode(6);
+					    	
 					    	if (pressure_type.matches("WildPressure")) {
 					    		Double intWild = (Double) isWild;
 					    		if (intWild == 1) {
