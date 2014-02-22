@@ -38,7 +38,7 @@ public class PlumberSystemB {
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		PressureFilter pressureFilter = new PressureFilter (recordDef, 003, 006);
-		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003});
+		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 006});
 		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"outb.dat");
 		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream);
 		FileOutputStream wildFileOutputStream = new FileOutputStream("resources"+File.separator+"wild.dat");
