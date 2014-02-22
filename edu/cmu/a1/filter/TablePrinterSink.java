@@ -178,6 +178,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					continue;
 				}
 				
+				else {
 				if(type == Integer.TYPE)
 					writeIntegerToFile((Integer) value);
 				else if(type == Long.TYPE)
@@ -186,6 +187,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					writeDoubleToFile((Double) value);
 				else //Default behavior?
 					writeDoubleToFile((Double) value);
+				}
 				}
 			catch (IllegalArgumentException e) {
 				//Value not found in Record object, don't write
