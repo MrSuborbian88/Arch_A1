@@ -62,7 +62,7 @@ public class PlumberSystemA {
 		if(args.length > 0)
 			infile = args[0];
 		
-		SystemA(infile,"resources"+File.separator+"outA.dat");
+		SystemA(infile,"resources"+File.separator+"OutputA.dat");
 	}
 
 }

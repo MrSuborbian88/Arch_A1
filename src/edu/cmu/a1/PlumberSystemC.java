@@ -91,7 +91,7 @@ public class PlumberSystemC {
 			infile1 = (args[0]);
 		if(args.length > 1)
 			infile2 = (args[1]);
-		SystemC(infile1,infile2,"resources"+File.separator+"outc.dat","resources"+File.separator+"PressureWildPoints.dat","resources"+File.separator+"LessThan10K.dat");
+		SystemC(infile1,infile2,"resources"+File.separator+"OutputC.dat","resources"+File.separator+"PressureWildPoints.dat","resources"+File.separator+"LessThan10K.dat");
 
 	}
 

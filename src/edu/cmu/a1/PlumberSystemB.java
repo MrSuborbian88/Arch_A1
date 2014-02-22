@@ -39,7 +39,7 @@ public class PlumberSystemB {
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		PressureFilter pressureFilter = new PressureFilter (recordDef, 003, 006);
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 006});
-		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"outb.dat");
+		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"OutputB.dat");
 		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream);
 		FileOutputStream wildFileOutputStream = new FileOutputStream(WildFile);
 		TablePrinterSink sinkWild = new TablePrinterSink(recordDef, wildFileOutputStream);
@@ -70,7 +70,7 @@ public class PlumberSystemB {
 		String infile = "resources"+File.separator+"FlightData.dat";
 		if(args.length > 0)
 			infile = (args[0]);
-		SystemB(infile,"resources"+File.separator+"outB.dat","resources"+File.separator+"wild.dat");
+		SystemB(infile,"resources"+File.separator+"outB.dat","resources"+File.separator+"WildPoints.dat");
 	}
 
 }
