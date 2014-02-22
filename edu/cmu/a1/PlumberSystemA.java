@@ -8,7 +8,7 @@ import edu.cmu.a1.base.RecordDefinition;
 import edu.cmu.a1.filter.DistanceConverter;
 import edu.cmu.a1.filter.FieldFilter;
 import edu.cmu.a1.filter.FileSource;
-import edu.cmu.a1.filter.NewSinkA;
+import edu.cmu.a1.filter.TablePrinterSink;
 import edu.cmu.a1.filter.TemperatureConverter;
 
 public class PlumberSystemA {
@@ -36,7 +36,7 @@ public class PlumberSystemA {
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002});
 		FileOutputStream fileOutputStream = new FileOutputStream("resources"+File.separator+"outA.dat");
-		NewSinkA sinkFilter = new NewSinkA(recordDef, fileOutputStream);
+		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream);
 
 		FToC.Connect(sourceFilter, 1, 2);
 		ftTom.Connect(FToC, 2, 3);
