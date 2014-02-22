@@ -1,20 +1,16 @@
 package edu.cmu.a1.filter;
 
 //Begin CFP
-import java.util.*;						// This class is used to interpret time words
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-//End CFP
-
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
+// This class is used to interpret time words
+//End CFP
 
 public class TablePrinterSink extends FilterFrameworkExtended {
 
@@ -96,13 +92,13 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 				catch (EndOfStreamException e)
 				{
-					ClosePorts();
+//					ClosePorts();
 					System.out.print( "\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread );
 					break;
 
 				} // catch
 				catch (IOException e) {
-					ClosePorts();
+//					ClosePorts();
 					System.out.print( "\n" + this.getName() + "::Sink Exiting; bytes read: " + bytesread );
 					break;
 				}
@@ -155,15 +151,16 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					    if (ids.equals(6)) {
 					    	
 					    	Object isWild = record.getValueByCode(6);
-					    	String pressure_type = record.getTitleByCode(6);
+//					    	String pressure_type = record.getTitleByCode(6);
+					    	Class<?> pressure_type = record.getTypeByCode(6);
 					    	
-					    	if (pressure_type.matches("WildPressure")) {
+					    	if (pressure_type == Double.TYPE || isWild instanceof Double) {
 					    		Double intWild = (Double) isWild;
 					    		if (intWild == 1) {
 							    	pressure_string += "*";
 							    	}
 					    	}
-					    	else if (pressure_type.matches("ExtrapolatedPressure")){
+					    	else if (pressure_type == Boolean.TYPE || isWild instanceof Boolean){
 					    		Boolean bWild = (Boolean) isWild;
 					    		if (bWild) {
 							    	pressure_string += "*";

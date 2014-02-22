@@ -21,7 +21,7 @@ public class PlumberSystemC {
 
 	public PlumberSystemC() {
 	}
-	public static void SystemC() throws FileNotFoundException {
+	public static void SystemC(String InputFilepath1,String InputFilepath2, String SystemOutputFilepath, String WildFile1, String WildFile2) throws FileNotFoundException {
 
 		RecordDefinition recordDef = new RecordDefinition();
 
@@ -37,17 +37,17 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(007, Boolean.TYPE, "ExtrapolatedAltitude");
 
 
-		FileSource firstSourceFilter = new FileSource(recordDef, "resources"+File.separator+"SubSetA-2009.dat");
-		FileSource secondSourceFilter = new FileSource(recordDef, "resources"+File.separator+"SubSetB-2009.dat");
+		FileSource firstSourceFilter = new FileSource(recordDef, InputFilepath1);
+		FileSource secondSourceFilter = new FileSource(recordDef, InputFilepath2);
 //		FileSource secondSourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
 
 		TimeMerge mergeFilter = new TimeMerge(recordDef, 000);
 		AltitudeFilter altitudeFilter = new AltitudeFilter(recordDef, 002, 007);
 		PressureFilter pressureFilter = new PressureFilter (recordDef, 003, 006);
 
-		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"outc.dat");
-		FileOutputStream wildPressureFileOutputStream = new FileOutputStream("resources"+File.separator+"PressureWildPoints.dat");
-		FileOutputStream wildAltitudeFileOutputStream = new FileOutputStream("resources"+File.separator+"LessThan10K.dat");
+		FileOutputStream primaryFileOutputStream = new FileOutputStream(SystemOutputFilepath);
+		FileOutputStream wildPressureFileOutputStream = new FileOutputStream(WildFile1);
+		FileOutputStream wildAltitudeFileOutputStream = new FileOutputStream(WildFile2);
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003});
 
 		
@@ -55,17 +55,17 @@ public class PlumberSystemC {
 		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream);
 		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream);
 
-		mergeFilter.Connect(firstSourceFilter, 3, INPUT);
-		mergeFilter.Connect(secondSourceFilter, 4, INPUT);
+		mergeFilter.Connect(firstSourceFilter, 3, 11);
+		mergeFilter.Connect(secondSourceFilter, 4, 12);
 
-		altitudeFilter.Connect(mergeFilter, OUTPUT, INPUT);
-		sinkWildAltitude.Connect(altitudeFilter, WILD_OUTPUT1, INPUT);
+		altitudeFilter.Connect(mergeFilter, 13, 14);
+		sinkWildAltitude.Connect(altitudeFilter, WILD_OUTPUT1, 15);
 
-		pressureFilter.Connect(altitudeFilter, OUTPUT, INPUT);
-		sinkWildPressure.Connect(pressureFilter, WILD_OUTPUT2, INPUT);
+		pressureFilter.Connect(altitudeFilter, 16, 17);
+		sinkWildPressure.Connect(pressureFilter, WILD_OUTPUT2, 18);
 		
-		fieldFilter.Connect(pressureFilter, OUTPUT, INPUT);
-		sinkPrimary.Connect(fieldFilter, OUTPUT, INPUT);
+		fieldFilter.Connect(pressureFilter, 22, 19);
+		sinkPrimary.Connect(fieldFilter, 23, 24);
 		
 		firstSourceFilter.start();
 		secondSourceFilter.start();
@@ -84,7 +84,14 @@ public class PlumberSystemC {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
-		SystemC();
+		String infile1 = "resources"+File.separator+"SubSetA-2009.dat";
+		String infile2 = "resources"+File.separator+"SubSetB-2009.dat";
+//		String infile2 = "resources"+File.separator+"FlightData.dat";
+		if(args.length > 0)
+			infile1 = (args[0]);
+		if(args.length > 1)
+			infile2 = (args[1]);
+		SystemC(infile1,infile2,"resources"+File.separator+"outc.dat","resources"+File.separator+"PressureWildPoints.dat","resources"+File.separator+"LessThan10K.dat");
 
 	}
 

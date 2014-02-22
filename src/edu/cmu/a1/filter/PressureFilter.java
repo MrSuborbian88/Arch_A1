@@ -16,7 +16,7 @@ public class PressureFilter extends FilterFrameworkExtended {
 	private boolean first = true;
 	private Integer wildPort;
 	private Integer WildIndicatorFieldId;
-	
+
 	private Double WILDPOINT = 1.0;
 	private Double UNWILDPOINT = 0.0;
 
@@ -32,7 +32,7 @@ public class PressureFilter extends FilterFrameworkExtended {
 	public void DoInnerWork(Record record )
 	{
 		try {
-			
+
 			double current_value = (Double) record.getValueByCode(PRESSURE_ID);
 			if(current_value < 0)
 			{
@@ -61,7 +61,7 @@ public class PressureFilter extends FilterFrameworkExtended {
 					//Interpolate between points
 					else {
 						double step = (current_value - previous_value) / (backlog.size() + 1);
-						
+
 						for(int i = 0; i < backlog.size(); i++) {
 							Record r = backlog.get(i);
 							previous_value += step;
@@ -69,15 +69,15 @@ public class PressureFilter extends FilterFrameworkExtended {
 							backlog.set(i, r);
 						}	
 					}
-					
-					
+
+
 				}
-				
+
 				writeQueue = true;
-				
+
 				previous_value = current_value;
 			}
-			
+
 			backlog.add(record);
 		} catch (IllegalArgumentException e) {
 			//No Altitude
@@ -93,9 +93,9 @@ public class PressureFilter extends FilterFrameworkExtended {
 
 		// Next we write a message to the terminal to let the world know we are alive...
 
-//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
+		//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
-		while (true)
+		while (this.inputsMap.size() > 0)
 		{
 			/*************************************************************
 			 *	Here we read a byte and write a byte
@@ -106,10 +106,10 @@ public class PressureFilter extends FilterFrameworkExtended {
 					Record record = readNextRecord(portID);
 					DoInnerWork(record);
 					if(writeQueue) {
-							for(Integer outID : this.outputsMap.keySet())
-								if(outID != this.wildPort)
-									for(Record r : backlog)
-										writeRecord(outID,r);
+						for(Integer outID : this.outputsMap.keySet())
+							if(outID != this.wildPort)
+								for(Record r : backlog)
+									writeRecord(outID,r);
 						backlog.clear();
 					}
 				} // try
@@ -122,11 +122,24 @@ public class PressureFilter extends FilterFrameworkExtended {
 
 				} // catch
 				catch (IOException e) {					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ClosePort(portID);
 				}
 			}
 
 		} // while
+
+		//Write any remaining values with the last 
+		if(backlog.size()  > 0 && previous_value >= 0) {
+			for(Integer outID : this.outputsMap.keySet())
+				if(outID != this.wildPort)			
+					for(Record r : backlog)
+					{
+						r.setValueByCode(PRESSURE_ID, previous_value);
+						writeRecord(outID,r);
+					}
+			backlog.clear();	
+		}
+
 
 	} // run	
 	/**

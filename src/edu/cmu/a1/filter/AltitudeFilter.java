@@ -54,7 +54,7 @@ public class AltitudeFilter extends FilterFrameworkExtended {
 
 		//	System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
-		while (true)
+		while (this.inputsMap.size() > 0)
 		{
 			/*************************************************************
 			 *	Here we read a byte and write a byte

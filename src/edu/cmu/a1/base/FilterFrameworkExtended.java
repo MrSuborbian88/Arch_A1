@@ -127,6 +127,11 @@ public class FilterFrameworkExtended extends FilterFramework
 			//Mark reset not supported by PipedInputStream
 			//inputsMap.get(portID).mark(1024);
 			fieldID = readInt(portID);
+			if(fieldID == -1)
+			{
+				ClosePort(portID);
+				break;
+			}
 		} while(fieldID != 0);
 		/*
 		try {

@@ -17,7 +17,8 @@ public class TimeMerge extends FilterFrameworkExtended {
 		this.recordMap = new HashMap<Integer,Record>();
 	}
 	private void UpdateMap() {
-		for(Integer portID : this.inputsMap.keySet()) {
+		Integer[] keys = this.inputsMap.keySet().toArray(new Integer [this.inputsMap.size()]);
+		for(Integer portID : keys) {
 			try
 			{
 				if(!this.recordMap.containsKey(portID)) {
@@ -73,9 +74,10 @@ public class TimeMerge extends FilterFrameworkExtended {
 			//Find (and remove) the record with the lowest time
 			Record record = FindAndRemoveLowestRecord();
 			//Write it out
-			for(Integer portID : this.outputsMap.keySet()) {
-					writeRecord(portID,record);
-			}
+			if(record != null)
+				for(Integer portID : this.outputsMap.keySet()) {
+						writeRecord(portID,record);
+				}
 
 
 

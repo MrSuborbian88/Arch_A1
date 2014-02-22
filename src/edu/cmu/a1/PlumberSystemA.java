@@ -20,7 +20,7 @@ public class PlumberSystemA {
 
 	}
 	
-	public static void SystemA() throws FileNotFoundException {
+	public static void SystemA(String InputFilepath, String SystemOutputFilepath) throws FileNotFoundException {
 		RecordDefinition recordDef = new RecordDefinition();
 
 		recordDef.addFieldDefinition(000, Long.TYPE, "Time");
@@ -31,11 +31,11 @@ public class PlumberSystemA {
 		recordDef.addFieldDefinition(005, Double.TYPE, "Attitude");
 
 
-		FileSource sourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
+		FileSource sourceFilter = new FileSource(recordDef, InputFilepath);
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002});
-		FileOutputStream fileOutputStream = new FileOutputStream("resources"+File.separator+"outA.dat");
+		FileOutputStream fileOutputStream = new FileOutputStream(SystemOutputFilepath);
 		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream);
 
 		FToC.Connect(sourceFilter, 1, 2);
@@ -58,9 +58,11 @@ public class PlumberSystemA {
 	 * @throws FileNotFoundException 
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
-		// TODO Auto-generated method stub
-		SystemA();
-
+		String infile = "resources"+File.separator+"FlightData.dat";
+		if(args.length > 0)
+			infile = args[0];
+		
+		SystemA(infile,"resources"+File.separator+"outA.dat");
 	}
 
 }
