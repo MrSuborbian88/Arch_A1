@@ -21,14 +21,9 @@ public class NewSinkA extends FilterFrameworkExtended {
 	private FileOutputStream fileOutputStream;
 	
 	Calendar TimeStamp = null;
-	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
-	StringBuffer outputBuffer = new StringBuffer();
-	
-//	public 
-//	Calendar TimeStamp = null;
 //	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
-//
-//	StringBuffer outputBuffer = new StringBuffer();
+	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss");
+
 	
 	public NewSinkA(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream) {
 		super(recordDefinition);
@@ -64,7 +59,7 @@ public class NewSinkA extends FilterFrameworkExtended {
 		 **************************************************************/
 
 
-		String header = "Time:         Temperature (C):             Altitude (m): \n";
+		String header = "Time:            Temperature (C):   Altitude (m): \n";
 		try {
 			fileOutputStream.write(header.getBytes());
 		} catch (IOException e1) {
@@ -161,17 +156,23 @@ public class NewSinkA extends FilterFrameworkExtended {
 		String valueString = value.toString();
 			fileOutputStream.write(valueString.getBytes());
 			fileOutputStream.write("\t".getBytes());	}
+	
 	private void writeLongToFile(Long value) throws IOException {
 //		for (byte datum : ByteBuffer.allocate(8).putLong(value).array())
 		String valueString = value.toString();
 		fileOutputStream.write(valueString.getBytes());	
 		fileOutputStream.write("\t".getBytes());	}
+	
 	private void writeDoubleToFile(Double value) throws IOException {
 //		for (byte datum : ByteBuffer.allocate(8).putDouble(value).array())
-		String valueString = value.toString();
+//		String valueString = value.toString();
+		String valueString = String.format("%.5f", value);
 		fileOutputStream.write(valueString.getBytes());	
 		fileOutputStream.write("\t".getBytes());	}
 	
+	private void writeStringToFile(String value) throws IOException {
+		fileOutputStream.write(value.getBytes());
+		fileOutputStream.write("\t".getBytes());	}
 	
 	private void writeRecordToFile(Record record) throws IOException  {
 		
@@ -180,8 +181,14 @@ public class NewSinkA extends FilterFrameworkExtended {
 			try {
 				Class<?> type = this.recordDefinition.getFieldType(fieldID);
 				Object value = record.getValueByCode(fieldID);
+
 				
-				writeIntegerToFile(fieldID);
+				if (fieldID == 0)
+				{ String timestamp = TimeStampFormat.format(value);
+					writeStringToFile(timestamp);	
+				}
+				else {
+					
 				if(type == Integer.TYPE)
 					writeIntegerToFile((Integer) value);
 				else if(type == Long.TYPE)
@@ -190,12 +197,13 @@ public class NewSinkA extends FilterFrameworkExtended {
 					writeDoubleToFile((Double) value);
 				else //Default behavior?
 					writeDoubleToFile((Double) value);
+				}
 			} catch (IllegalArgumentException e) {
 				//Value not found in Record object, don't write
 			}
-			fileOutputStream.write("\n".getBytes());
+			
 		}
-		
+		fileOutputStream.write("\n".getBytes());
 
 	}
 
