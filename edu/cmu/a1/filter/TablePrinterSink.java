@@ -1,5 +1,11 @@
 package edu.cmu.a1.filter;
 
+//Begin CFP
+import java.util.*;						// This class is used to interpret time words
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+//End CFP
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -13,9 +19,18 @@ import edu.cmu.a1.base.RecordDefinition;
 public class TablePrinterSink extends FilterFrameworkExtended {
 
 	private FileOutputStream fileOutputStream;
+	
+	Calendar TimeStamp = null;
+//	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
+	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss:SSS");
+
+	
 	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream) {
 		super(recordDefinition);
 		this.fileOutputStream = fileOutputStream;
+		
+		
+
 	}
 
 	public void run()
@@ -26,8 +41,8 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		 *	to the terminal.
 		 *************************************************************************************/
 
-		Calendar TimeStamp = Calendar.getInstance();
-		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
+//		Calendar TimeStamp = Calendar.getInstance();
+//		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 
 		int MeasurementLength = 8;		// This is the length of all measurements (including time) in bytes
 		int IdLength = 4;				// This is the length of IDs in the byte stream
@@ -43,7 +58,17 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		 *	First we announce to the world that we are alive...
 		 **************************************************************/
 
-		System.out.print( "\n" + this.getName() + "::Sink Reading ");
+
+		String header = "Time:            Temperature (C):   Altitude (m): \n";
+		try {
+			fileOutputStream.write(header.getBytes());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+				
+				
+				
 		Integer[] codes = this.recordDefinition.getFieldCodes();
 		for (Integer portID : inputsMap.keySet())
 			while (true)
@@ -55,33 +80,9 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				// that it is IdLength long. So we first decommutate the ID bytes.
 					 ****************************************************************************/
 
-					/*
-					Integer idcode = readInt(portID);
-					for(Integer code : codes) {
-						if(idcode == code) {
-							fileOutputStream.write(idcode);
-							Class<?> type = this.recordDefinition.getFieldType(code);
-							if(type == Integer.TYPE) { 
-								fileOutputStream.write(readInt(portID));
-								//writeField(portID,readInt(portID));
-							}
-							else if(type == Long.TYPE) {
-								for (byte datum : ByteBuffer.allocate(8).putLong(readLong(portID)).array()) {
-									fileOutputStream.write(datum);
-									//writeField(portID,readLong(portID));
-								}
-							}
-							else if(type == Double.TYPE) {
-								for (byte datum : ByteBuffer.allocate(8).putDouble(readDouble(portID)).array()) {
-									fileOutputStream.write(datum);
-									//writeField(portID,readDouble(portID));
-								}
-							}
-						}
-						fileOutputStream.flush();
-					}
-				*/
 				Record r = readNextRecord(portID);
+				
+				
 				System.out.println(r);
 				writeRecordToFile(r);
 				fileOutputStream.flush();
@@ -110,17 +111,26 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 	} // run
 	
+
+	
 	private void writeIntegerToFile(Integer value) throws IOException {
-		for (byte datum : ByteBuffer.allocate(4).putInt(value).array())
-			fileOutputStream.write(datum);	}
+		String valueString = value.toString();
+			fileOutputStream.write(valueString.getBytes());
+			fileOutputStream.write("\t".getBytes());	}
+	
 	private void writeLongToFile(Long value) throws IOException {
-		for (byte datum : ByteBuffer.allocate(8).putLong(value).array())
-			fileOutputStream.write(datum);
-	}
+		String valueString = value.toString();
+		fileOutputStream.write(valueString.getBytes());	
+		fileOutputStream.write("\t".getBytes());	}
+	
 	private void writeDoubleToFile(Double value) throws IOException {
-		for (byte datum : ByteBuffer.allocate(8).putDouble(value).array())
-			fileOutputStream.write(datum);
-	}
+		String valueString = String.format("%.5f", value);
+		fileOutputStream.write(valueString.getBytes());	
+		fileOutputStream.write("\t".getBytes());	}
+	
+	private void writeStringToFile(String value) throws IOException {
+		fileOutputStream.write(value.getBytes());
+		fileOutputStream.write("\t".getBytes());	}
 	
 	private void writeRecordToFile(Record record) throws IOException  {
 		
@@ -129,8 +139,45 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 			try {
 				Class<?> type = this.recordDefinition.getFieldType(fieldID);
 				Object value = record.getValueByCode(fieldID);
+
 				
-				writeIntegerToFile(fieldID);
+				if (fieldID == 0)
+				{ String timestamp = TimeStampFormat.format(value);
+					writeStringToFile(timestamp);	
+				}
+				
+				/**********************************************************************************************
+				 * We search to see if there are wild pressure points, and if so we replace them with asterisks
+				 **********************************************************************************************/
+				else if (fieldID == 3) {
+					String pressure_string = value.toString();
+					for (Integer ids : record.getCodes()) {
+					    if (ids.equals(6)) {
+					    	
+					    	Object isWild = record.getValueByCode(6);
+					    	String pressure_type = record.getTitleByCode(6);
+					    	if (pressure_type.matches("WildPressure")) {
+					    		Double intWild = (Double) isWild;
+					    		if (intWild == 1) {
+							    	pressure_string += "*";
+							    	}
+					    	}
+					    	else if (pressure_type.matches("ExtrapolatedPressure")){
+					    		Boolean bWild = (Boolean) isWild;
+					    		if (bWild) {
+							    	pressure_string += "*";
+							    	}
+					    	}
+
+					    }
+					}
+					writeStringToFile(pressure_string);
+				}
+				
+				else if (fieldID == 6 || fieldID == 7) {
+					continue;
+				}
+				
 				if(type == Integer.TYPE)
 					writeIntegerToFile((Integer) value);
 				else if(type == Long.TYPE)
@@ -139,13 +186,17 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					writeDoubleToFile((Double) value);
 				else //Default behavior?
 					writeDoubleToFile((Double) value);
-			} catch (IllegalArgumentException e) {
+				}
+			catch (IllegalArgumentException e) {
 				//Value not found in Record object, don't write
 			}
 			
 		}
+		fileOutputStream.write("\n".getBytes());
 
 	}
+
+	
 	/**
 	 * @param args
 	 */
