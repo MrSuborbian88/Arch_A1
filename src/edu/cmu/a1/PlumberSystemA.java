@@ -32,7 +32,7 @@ public class PlumberSystemA {
 
 		String header = "Time:                        Temperature (C):     Altitude (m):     ";
 
-		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		int[] fieldOrder = {000, 004, 002, 003, 001, 005};
 		
 		
 		FileSource sourceFilter = new FileSource(recordDef, InputFilepath);

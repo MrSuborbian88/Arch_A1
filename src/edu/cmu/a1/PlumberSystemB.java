@@ -36,7 +36,7 @@ public class PlumberSystemB {
 		// Headers for output file
 		String primaryHeader = "Time:                        Temperature (C):     Altitude (m):     Pressure (psi):";
 		String wildHeader = "Time:                        Pressure (psi):";
-		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006};
 		int[] wildFieldOrder = {000, 003};
 		
 		FileSource sourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
