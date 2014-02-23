@@ -122,8 +122,12 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		fileOutputStream.write(valueString.getBytes());	
 		fileOutputStream.write("\t".getBytes());	}
 	
-	private void writeDoubleToFile(Double value) throws IOException {
-		String valueString = String.format("%.5f", value);
+	private void writeDoubleToFile(Double value, String significantDigits) throws IOException {
+//		String valueString = String.format("%.5f", value);
+		
+//		String.format("%010d", Integer.parseInt(mystring));
+		
+		String valueString = String.format(significantDigits, value);
 		fileOutputStream.write(valueString.getBytes());	
 		fileOutputStream.write("\t".getBytes());	}
 	
@@ -145,11 +149,20 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					writeStringToFile(timestamp);	
 				}
 				
+				
+				if (fieldID == 1) {
+					writeDoubleToFile((Double) value, "%04.5f");
+				}
+				
+				if (fieldID == 2) {
+					writeDoubleToFile((Double) value, "%04.5f");
+				}
+				
 				/**********************************************************************************************
 				 * We search to see if there are wild pressure points, and if so we replace them with asterisks
 				 **********************************************************************************************/
-				else if (fieldID == 3) {
-					String pressure_string = String.format("%.5f", value);
+				if (fieldID == 3) {
+					String pressure_string = String.format("%04.5f", value);
 					for (Integer ids : record.getCodes()) {
 					    if (ids.equals(6)) {
 					    	
@@ -175,20 +188,29 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					writeStringToFile(pressure_string);
 				}
 				
-				else if (fieldID == 6 || fieldID == 7) {
-					continue;
+				if (fieldID == 4) {
+					writeDoubleToFile((Double) value, "%04.5f");
+			
 				}
 				
-				else {
-				if(type == Integer.TYPE)
-					writeIntegerToFile((Integer) value);
-				else if(type == Long.TYPE)
-					writeLongToFile((Long) value);
-				else if(type == Double.TYPE)
-					writeDoubleToFile((Double) value);
-				else //Default behavior?
-					writeDoubleToFile((Double) value);
+				if (fieldID ==5) {
+					writeDoubleToFile((Double) value, "%04.5f");
 				}
+				
+//				else if (fieldID == 6 || fieldID == 7) {
+//					continue;
+//				}
+				
+//				else {
+//				if(type == Integer.TYPE)
+//					writeIntegerToFile((Integer) value);
+//				else if(type == Long.TYPE)
+//					writeLongToFile((Long) value);
+//				else if(type == Double.TYPE)
+//					writeDoubleToFile((Double) value);
+//				else //Default behavior?
+//					writeDoubleToFile((Double) value);
+//				}
 				}
 			catch (IllegalArgumentException e) {
 				//Value not found in Record object, don't write
