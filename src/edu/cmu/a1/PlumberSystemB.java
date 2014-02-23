@@ -41,6 +41,9 @@ public class PlumberSystemB {
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		PressureFilter pressureFilter = new PressureFilter (recordDef, 003, 006);
+		
+		FieldFilter wildPressureFilter = new FieldFilter(recordDef, new Integer[] {000, 003, 006});
+		
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 006});
 		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"OutputB.dat");
 		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader);
@@ -50,15 +53,21 @@ public class PlumberSystemB {
 		FToC.Connect(sourceFilter, OUTPUT, INPUT);
 		ftTom.Connect(FToC, OUTPUT, INPUT);
 		pressureFilter.Connect(ftTom, OUTPUT, INPUT);
+		
+		wildPressureFilter.Connect(pressureFilter, WILD_OUTPUT, INPUT);
+		
 		fieldFilter.Connect(pressureFilter, OUTPUT, INPUT);
 		sinkPrimary.Connect(fieldFilter, OUTPUT, INPUT);
 
-		sinkWild.Connect(pressureFilter, WILD_OUTPUT, INPUT);	
+		sinkWild.Connect(wildPressureFilter, WILD_OUTPUT, INPUT);
+		
+//		sinkWild.Connect(pressureFilter, WILD_OUTPUT, INPUT);	
 	
 		sourceFilter.start();
 		FToC.start();
 		ftTom.start();
 		pressureFilter.start();
+		wildPressureFilter.start();
 		fieldFilter.start();
 		sinkPrimary.start();
 		sinkWild.start();
