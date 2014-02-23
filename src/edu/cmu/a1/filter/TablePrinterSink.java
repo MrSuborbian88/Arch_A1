@@ -133,7 +133,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 		String valueString = String.format(significantDigits, value);
 		fileOutputStream.write(valueString.getBytes());	
-		fileOutputStream.write("\t".getBytes());	}
+		fileOutputStream.write("\t \t \t \t".getBytes());	}
 
 	private void writeStringToFile(String value) throws IOException {
 		fileOutputStream.write(value.getBytes());

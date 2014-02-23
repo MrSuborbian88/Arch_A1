@@ -36,7 +36,7 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(006, Double.TYPE, "ExtrapolatedPressure");
 		recordDef.addFieldDefinition(007, Double.TYPE, "ExtrapolatedAltitude");
 
-		String primaryHeader = "Time:                        Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):";
+		String primaryHeader = "Time:                        Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):      Velocity (kts):";
 		String wildPressureHeader = "Time:                        Pressure (psi):";
 		String wildAltitudeHeader = "Time:                        Altitude (m):";
 		
@@ -58,7 +58,7 @@ public class PlumberSystemC {
 		FileOutputStream primaryFileOutputStream = new FileOutputStream(SystemOutputFilepath);
 		FileOutputStream wildPressureFileOutputStream = new FileOutputStream(WildFile1);
 		FileOutputStream wildAltitudeFileOutputStream = new FileOutputStream(WildFile2);
-		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 005, 006, 007});
+		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 005, 001, 006, 007});
 
 		
 		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader, primaryFieldOrder);
