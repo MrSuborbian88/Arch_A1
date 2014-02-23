@@ -61,7 +61,7 @@ public class TimeMerge extends FilterFrameworkExtended {
 	}
 	public void run()
 	{
-		while (this.inputsMap.size() > 0 && recordMap.size() > 0)
+		while (this.inputsMap.size() > 0 || recordMap.size() > 0)
 		{
 			//Get a record from each stream (that doesn't have a record stored)
 			UpdateMap();

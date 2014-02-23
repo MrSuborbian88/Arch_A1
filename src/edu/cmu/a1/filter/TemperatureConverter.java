@@ -64,12 +64,12 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 				catch (EndOfStreamException e)
 				{
 					ClosePort(portID);
-					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-					break;
+//					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
+//					break;
 
 				} // catch
 				catch (IOException e) {					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ClosePort(portID);
 				}
 			}
 
