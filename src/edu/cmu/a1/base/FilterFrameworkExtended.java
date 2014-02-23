@@ -31,7 +31,14 @@ public class FilterFrameworkExtended extends FilterFramework
 	protected HashMap<Integer, PipedOutputStream> outputsMap;
 
 
-
+	/***************************************************************************
+	 * CONCRETE METHOD:: FilterFrameworkExtended
+	 * Arguments:
+	 * 	RecordDefinition - this defines the format of a record (field ids, types, names).
+	 * Returns: void
+	 *
+	 *
+	 ****************************************************************************/
 	public FilterFrameworkExtended(RecordDefinition recordDefinition) {
 		if(recordDefinition == null)
 			throw new NullPointerException();
@@ -39,7 +46,9 @@ public class FilterFrameworkExtended extends FilterFramework
 		this.inputsMap = new HashMap<Integer, PipedInputStream>();
 		this.outputsMap = new HashMap<Integer, PipedOutputStream>();
 	}
-	public void writeField(Integer portID, Integer value) {
+	
+	//Private method to write a value to an output port
+	private void writeField(Integer portID, Integer value) {
 		if(outputsMap.containsKey(portID))
 		{
 			PipedOutputStream output = outputsMap.get(portID);
@@ -51,7 +60,8 @@ public class FilterFrameworkExtended extends FilterFramework
 			throw new IllegalArgumentException("FieldID not connected.");
 		}
 	}
-	public void writeField(Integer portID, Long value) {
+	//Private method to write a value to an output port
+	private void writeField(Integer portID, Long value) {
 		if(outputsMap.containsKey(portID))
 		{
 			PipedOutputStream output = outputsMap.get(portID);
@@ -63,7 +73,8 @@ public class FilterFrameworkExtended extends FilterFramework
 			throw new IllegalArgumentException("FieldID not connected.");
 		}
 	}
-	public void writeField(Integer portID, Double value) {
+	//Private method to write a value to an output port
+	private void writeField(Integer portID, Double value) {
 		if(outputsMap.containsKey(portID))
 		{
 			PipedOutputStream output = outputsMap.get(portID);
@@ -75,7 +86,7 @@ public class FilterFrameworkExtended extends FilterFramework
 			throw new IllegalArgumentException("FieldID not connected.");
 		}
 	}
-	public void WriteFilterOutputPort(byte datum, PipedOutputStream OutputWritePort)
+	protected void WriteFilterOutputPort(byte datum, PipedOutputStream OutputWritePort)
 	{
 		try
 		{
@@ -93,6 +104,12 @@ public class FilterFrameworkExtended extends FilterFramework
 		return;
 
 	} // WriteFilterPort
+	
+	/***************************************************************************
+	 * This routine reads bytes from the current stream and assembles a new
+	 * record (based on RecordDefinition).  The record data object can be used to format the output.
+	 * @return: The next record or exception if there are no more records.
+	 ****************************************************************************/
 	private boolean first = true;
 	public Record readNextRecord(Integer portID) throws IOException, EndOfStreamException {
 		Record record = new Record(this.recordDefinition);
@@ -147,6 +164,15 @@ public class FilterFrameworkExtended extends FilterFramework
 		 */
 		return record;
 	}
+	/***************************************************************************
+	 * This routine disassembles a record to the output stream.
+	 * 
+	 *  Arguments:
+	 * 	portID - This output steam identifier to write the record to
+	 *  record - A record object to write to the output stream
+	 * @return: The next record or exception if there are no more records.
+	 ****************************************************************************/
+
 	public void writeRecord(Integer portID, Record record)  {
 
 		for(Integer fieldID : record.getCodes())
@@ -172,87 +198,6 @@ public class FilterFrameworkExtended extends FilterFramework
 
 	}
 
-	/***************************************************************************
-	 * This routine reads bytes from the current stream and assembles a new
-	 * record.  The record data object can be used to format the output.
-	 * @return: The next record or null if no more records.
-	 ****************************************************************************/
-
-	private FlightDataRecord readNextFlightRecord(Integer PortID)
-	{
-		//		if(!inputsMap.containsKey(PortID))
-		//			throw new IllegalArgumentException("FieldID not connected.");
-		//		FilterFramework field = inputsMap.get(PortID);
-		//		if (field.endOfStream)
-		//		{
-		//			return null;
-		//		}
-
-		// Make a flight data record
-		FlightDataRecord record = new FlightDataRecord();
-
-		try 
-		{
-			// If we have a next time object then use it, because it is the 
-			// one we parsed (cached) from the end of the last readNextRecord which
-			// indicated a new record.  See case 0 below for how/when we cache it.
-			if (nextTime_ != null)
-			{
-				record.setTime(nextTime_);
-				nextTime_ = null;
-			}
-			else
-			{
-				// This is the first time, prime the pump by reading the time record.
-				int id = readInt(PortID);
-				// TODO:  Check the id for validity
-				record.setTime(readLong(PortID));
-			}
-
-			// Read records until we find the next time stamp or get an end of stream
-			while (true)
-			{
-				int id = readInt(PortID);
-				switch (id)
-				{
-				case 0: // Time 
-					// This means we are at the next record and we are done.
-					// Since we can't push it back on the stream, cache it off
-					// until the next read.
-					nextTime_ = readLong(PortID);
-					return record;
-
-				case 1: // Velocity
-					record.setVelocity(readDouble(PortID));
-					break;
-
-				case 2: // Altitude
-					record.setAltitude(readDouble(PortID));
-					break;
-
-				case 3: // Pressure
-					record.setPressure(readDouble(PortID));
-					break;
-
-				case 4: // Temperature
-					record.setTemperature(readDouble(PortID));
-					break;
-
-				case 5: // Attitude
-					record.setAttitude(readDouble(PortID));
-					break;
-				}
-			}
-		}
-		catch (EndOfStreamException e)
-		{
-			// We get this at the end, when we are looking for more data.
-			endOfStream_ = true;
-
-			// Send back what we have.
-			return record;
-		}
-	}
 
 	protected byte ReadFilterInputPort(Integer PortID) throws EndOfStreamException
 	{
@@ -263,54 +208,9 @@ public class FilterFrameworkExtended extends FilterFramework
 		byte datum = 0;
 
 		/***********************************************************************
-		 * Since delays are possible on upstream filters, we first wait until
-		 * there is data available on the input port. We check,... if no data is
-		 * available on the input port we wait for a quarter of a second and check
-		 * again. Note there is no timeout enforced here at all and if upstream
-		 * filters are deadlocked, then this can result in infinite waits in this
-		 * loop. It is necessary to check to see if we are at the end of stream
-		 * in the wait loop because it is possible that the upstream filter completes
-		 * while we are waiting. If this happens and we do not check for the end of
-		 * stream, then we could wait forever on an upstream pipe that is long gone.
-		 * Unfortunately Java pipes do not throw exceptions when the input pipe is
-		 * broken. So what we do here is to see if the upstream filter is alive.
-		 * if it is, we assume the pipe is still open and sending data. If the
-		 * filter is not alive, then we assume the end of stream has been reached.
-		 ***********************************************************************/
-		/*
-		try
-		{
-			while (InputReadPort.available()==0 )
-			{
-				if (EndOfInputStream())
-				{
-					throw new EndOfStreamException("End of input stream reached");
-
-				} //if
-
-				sleep(250);
-
-			} // while
-
-		} // try
-
-		catch( EndOfStreamException Error )
-		{
-			throw Error;
-
-		} // catch
-
-		catch( Exception Error )
-		{
-			System.out.println( "\n" + this.getName() + " Error in read port wait loop::" + Error );
-
-		} // catch
-		 */
-		/***********************************************************************
 		 * If at least one byte of data is available on the input
 		 * pipe we can read it. We read and write one byte to and from ports.
 		 ***********************************************************************/
-
 		try
 		{
 			datum = (byte)InputReadPort.read();
@@ -329,7 +229,7 @@ public class FilterFrameworkExtended extends FilterFramework
 
 
 	// Internal routine to read an integer from the stream	
-	public Integer readInt(Integer PortID) throws EndOfStreamException
+	private Integer readInt(Integer PortID) throws EndOfStreamException
 	{
 		byte databyte = 0;
 		int result = 0;
@@ -352,7 +252,7 @@ public class FilterFrameworkExtended extends FilterFramework
 
 
 	// Internal routine to read a long from the stream
-	protected long readLong(Integer PortID) throws EndOfStreamException
+	private long readLong(Integer PortID) throws EndOfStreamException
 	{
 		byte databyte = 0;
 		long result = 0;
@@ -374,7 +274,7 @@ public class FilterFrameworkExtended extends FilterFramework
 	}
 
 	// Internal routine to read a double from the stream
-	protected double readDouble(Integer PortID) throws EndOfStreamException
+	private double readDouble(Integer PortID) throws EndOfStreamException
 	{
 		byte databyte = 0;
 		long measurement = 0;
@@ -395,25 +295,17 @@ public class FilterFrameworkExtended extends FilterFramework
 		return Double.longBitsToDouble(measurement);
 	}
 
-	// This is where we cache the time from the beginning of the next record
-	// when we are parsing.
-	protected Long nextTime_ = null;
-
-	// Once we hit the end of the stream, we set to true so the next 
-	// read knows to return null.
-	protected boolean endOfStream_ = false;
 	/***************************************************************************
 	 * CONCRETE METHOD:: Connect
 	 * Purpose: This method connects filters to each other. All connections are
-	 * through the inputport of each filter. That is each filter's inputport is
-	 * connected to another filter's output port through this method.
+	 * through the inputport of each filter. That is each filter's inputport (local) is
+	 * connected to another filter's output port (remote) through this method.
 	 *
 	 * Arguments:
 	 * 	FilterFramework - this is the filter that this filter will connect to.
-	 *
+	 *  remote - this is the numeric reference to this filter's PipedInputStream
+	 *  local - this is the numeric reference to the connected filter's PipedOutputStream
 	 * Returns: void
-	 *
-	 * Exceptions: IOException
 	 *
 	 ****************************************************************************/
 
@@ -439,6 +331,11 @@ public class FilterFrameworkExtended extends FilterFramework
 
 		} // catch
 	} // Connect
+	/***************************************************************************
+	 * CONCRETE METHOD:: ClosePorts
+	 * Purpose: Closes and removes all Input and Output Streams
+	 *
+	 ****************************************************************************/
 	protected void ClosePorts()
 	{
 		try
@@ -460,6 +357,17 @@ public class FilterFrameworkExtended extends FilterFramework
 		} // catch
 
 	} // ClosePorts
+	
+	/***************************************************************************
+	 * CONCRETE METHOD:: ClosePort
+	 * Purpose: This method closes and removes any input or output stream referenced
+	 * with the portID 
+	 *
+	 * Arguments:
+	 * 	portID - Any input or output with this portID reference will be closed & removed.
+	 * Returns: void
+	 *
+	 ****************************************************************************/
 	protected void ClosePort(Integer portID)
 	{
 		try
