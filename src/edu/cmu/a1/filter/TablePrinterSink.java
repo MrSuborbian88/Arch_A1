@@ -150,17 +150,18 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				Object value = record.getValueByCode(fieldID);
 
 
-				if (fieldID == 0)
-				{ String timestamp = TimeStampFormat.format(value);
-				writeStringToFile(timestamp);	
+				if (fieldID == 0) // Time
+				{ String timeStamp = TimeStampFormat.format(value);
+				timeStamp += "\t";
+				writeStringToFile(timeStamp);	
 				}
 
 
-				if (fieldID == 1) {
+				if (fieldID == 1) { // Velocity 
 					writeDoubleToFile((Double) value, "%04.5f");
 				}
 
-				if (fieldID == 2) {
+				if (fieldID == 2) { // Altitude
 					//					writeDoubleToFile((Double) value, "%04.5f");
 
 					String altitudeString = String.format("%04.5f", value);
@@ -189,7 +190,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				/**********************************************************************************************
 				 * We search to see if there are wild pressure points, and if so we replace them with asterisks
 				 **********************************************************************************************/
-				if (fieldID == 3) {
+				if (fieldID == 3) { // Pressure
 					String pressure_string = String.format("%04.5f", value);
 					for (Integer ids : fieldOrder) {
 						if (ids.equals(6)) {
@@ -215,7 +216,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					writeStringToFile(pressure_string);
 				}
 
-				if (fieldID == 4) {
+				if (fieldID == 4) { // Temperature
 					
 //					Double price = 32.0;
 				    DecimalFormat decim = new DecimalFormat("000.00000");
@@ -226,7 +227,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 				}
 
-				if (fieldID ==5) {
+				if (fieldID ==5) { // Attitude
 					writeDoubleToFile((Double) value, "%04.5f");
 				}
 

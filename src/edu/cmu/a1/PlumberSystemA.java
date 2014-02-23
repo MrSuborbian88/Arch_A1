@@ -30,8 +30,8 @@ public class PlumberSystemA {
 		recordDef.addFieldDefinition(004, Double.TYPE, "Temperature");
 		recordDef.addFieldDefinition(005, Double.TYPE, "Attitude");
 
-		String header = "Time:     Temperature (C):     Altitude (m):     ";
-//		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		String header = "Time:                        Temperature (C):     Altitude (m):     ";
+
 		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
 		
 		
