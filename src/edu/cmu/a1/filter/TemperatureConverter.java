@@ -10,7 +10,7 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 
 	public TemperatureConverter(RecordDefinition recordDefinition, Integer FieldID) {
 		super(recordDefinition);
-		//TODO
+		this.TEMPERATURE_FIELDID = FieldID;
 	}
 	private Integer TEMPERATURE_FIELDID = 4;
 	public void DoInnerWork(Record r )
@@ -47,7 +47,7 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 
 //		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
-		while (true)
+		while (this.inputsMap.size() > 0)
 		{
 			/*************************************************************
 			 *	Here we read a byte and write a byte

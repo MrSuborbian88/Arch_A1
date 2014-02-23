@@ -213,3 +213,9 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+resources/OutputA.dat
+resources/WildPoints.dat
+resources/OutputB.dat
+resources/PressureWildPoints.dat
+resources/OutputC.dat
+resources/LessThan10K.dat

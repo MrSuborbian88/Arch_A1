@@ -1,6 +1,5 @@
 package edu.cmu.a1.filter;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import edu.cmu.a1.base.FilterFrameworkExtended;
@@ -19,28 +18,23 @@ public class TimeMerge extends FilterFrameworkExtended {
 	private void UpdateMap() {
 		Integer[] keys = this.inputsMap.keySet().toArray(new Integer [this.inputsMap.size()]);
 		for(Integer portID : keys) {
-			try
-			{
-				if(!this.recordMap.containsKey(portID)) {
-					//Read records until one has a time field
-					while(true) {
+			if(!this.recordMap.containsKey(portID)) {
+				//Read records until one has a time field
+				while(true) {
+					try {
 						Record record = readNextRecord(portID);
 						this.recordMap.put(portID,record);
 						try {
 							record.getValueByCode(TIME_FIELDID);
 							break;
 						} catch(IllegalArgumentException e ) {
-							//Find
+							//Not in this record
 						}
+					} catch (Exception e){
+						ClosePort(portID);
+						break;
 					}
 				}
-			} // try
-			catch (EndOfStreamException e)
-			{
-				ClosePort(portID);
-			} // catch
-			catch (IOException e) {
-				ClosePort(portID);
 			}
 		}
 
@@ -67,7 +61,7 @@ public class TimeMerge extends FilterFrameworkExtended {
 	}
 	public void run()
 	{
-		while (true)
+		while (this.inputsMap.size() > 0 && recordMap.size() > 0)
 		{
 			//Get a record from each stream (that doesn't have a record stored)
 			UpdateMap();
@@ -76,7 +70,7 @@ public class TimeMerge extends FilterFrameworkExtended {
 			//Write it out
 			if(record != null)
 				for(Integer portID : this.outputsMap.keySet()) {
-						writeRecord(portID,record);
+					writeRecord(portID,record);
 				}
 
 

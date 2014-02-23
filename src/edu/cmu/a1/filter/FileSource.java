@@ -43,7 +43,6 @@ public class FileSource extends FilterFrameworkExtended
 		int byteswritten = 0;				// Number of bytes written to the stream.
 		DataInputStream in = null;			// File stream reference.
 		byte databyte = 0;					// The byte of data read from the file
-
 		try
 		{
 			/***********************************************************************************

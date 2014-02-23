@@ -52,7 +52,7 @@ public class FieldFilter extends FilterFrameworkExtended{
 
 //		System.out.print( "\n" + this.getName() + "::Middle Reading ");
 
-		while (true)
+		while (inputsMap.size() > 0)
 		{
 			/*************************************************************
 			 *	Here we read a byte and write a byte
@@ -70,11 +70,11 @@ public class FieldFilter extends FilterFrameworkExtended{
 				{
 					ClosePort(portID);
 					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-					break;
+//					break;
 
 				} // catch
 				catch (IOException e) {					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ClosePort(portID);
 				}
 			}
 

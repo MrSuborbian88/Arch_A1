@@ -69,8 +69,9 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				
 				
 		Integer[] codes = this.recordDefinition.getFieldCodes();
+		while (this.inputsMap.size() > 0)
 		for (Integer portID : inputsMap.keySet())
-			while (true)
+
 			{
 				try
 				{
@@ -82,9 +83,11 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				Record r = readNextRecord(portID);
 				
 				
-				System.out.println(r);
+//				System.out.println(r);
 				writeRecordToFile(r);
 				fileOutputStream.flush();
+//				if(this.inputsMap.get(portID).available() == 0)
+//					ClosePort(portID);
 				} // try
 
 				/*******************************************************************************

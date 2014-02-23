@@ -110,27 +110,31 @@ public class FilterFrameworkExtended extends FilterFramework
 			fieldID = 0;
 		do 
 		{
-
-			//			this.recordDefinition.getFieldType(fieldID);
-			if(this.recordDefinition.hasFieldCode(fieldID))
-			{
-				Class<?> type = this.recordDefinition.getFieldType(fieldID);
-				if(type == Integer.TYPE)
-					record.setValueByCode(fieldID, readInt(portID));
-				else if(type == Long.TYPE)
-					record.setValueByCode(fieldID, readLong(portID));
-				else if(type == Double.TYPE)
-					record.setValueByCode(fieldID, readDouble(portID));
-				else //Default behavior?
-					record.setValueByCode(fieldID, readDouble(portID));
-			}
-			//Mark reset not supported by PipedInputStream
-			//inputsMap.get(portID).mark(1024);
-			fieldID = readInt(portID);
-			if(fieldID == -1)
-			{
+			try {
+				//			this.recordDefinition.getFieldType(fieldID);
+				if(this.recordDefinition.hasFieldCode(fieldID))
+				{
+					Class<?> type = this.recordDefinition.getFieldType(fieldID);
+					if(type == Integer.TYPE)
+						record.setValueByCode(fieldID, readInt(portID));
+					else if(type == Long.TYPE)
+						record.setValueByCode(fieldID, readLong(portID));
+					else if(type == Double.TYPE)
+						record.setValueByCode(fieldID, readDouble(portID));
+					else //Default behavior?
+						record.setValueByCode(fieldID, readDouble(portID));
+				}
+				//Mark reset not supported by PipedInputStream
+				//inputsMap.get(portID).mark(1024);
+				fieldID = readInt(portID);
+				if(fieldID == -1)
+				{
+					ClosePort(portID);
+					break;
+				}
+			} catch(Exception e) {
 				ClosePort(portID);
-				break;
+				return record;
 			}
 		} while(fieldID != 0);
 		/*
@@ -151,7 +155,7 @@ public class FilterFrameworkExtended extends FilterFramework
 			try {
 				Class<?> type = this.recordDefinition.getFieldType(fieldID);
 				Object value = record.getValueByCode(fieldID);
-				
+
 				writeField(portID,fieldID);
 				if(type == Integer.TYPE)
 					writeField(portID,(Integer) value);
@@ -316,9 +320,9 @@ public class FilterFrameworkExtended extends FilterFramework
 
 		catch( Exception Error )
 		{
-			System.out.println( "\n" + this.getName() + " Pipe read error::" + Error );
-			return datum;
-
+//			System.out.println( "\n" + this.getName() + " Pipe read error::" + Error );
+//			return datum;
+			throw new EndOfStreamException();
 		} // catch
 
 	} // ReadFilterPort
@@ -463,6 +467,7 @@ public class FilterFrameworkExtended extends FilterFramework
 			if(this.inputsMap.containsKey(portID))
 			{
 				this.inputsMap.get(portID).close();
+
 				this.inputsMap.remove(portID);
 			}
 		}
