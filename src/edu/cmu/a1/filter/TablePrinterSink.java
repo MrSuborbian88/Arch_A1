@@ -158,9 +158,26 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				}
 				
 				if (fieldID == 2) {
-					writeDoubleToFile((Double) value, "%04.5f");
+//					writeDoubleToFile((Double) value, "%04.5f");
+					
+					String altitudeString = String.format("%04.5f", value);
+					for (Integer ids : record.getCodes()) {
+					    if (ids.equals(7)) {
+					    	
+					    	Object isExtrapolated = record.getValueByCode(7);
+					    	Class<?> altitudeType = record.getTypeByCode(7);
+
+					    	if (altitudeType == Boolean.TYPE || isExtrapolated instanceof Boolean){
+					    		Boolean bExtrapolated = (Boolean) isExtrapolated;
+					    		if (bExtrapolated) {
+					    			altitudeString += "*";
+							    	}
+					    	}
+					    }
+					}
+					writeStringToFile(altitudeString);
 				}
-				
+
 				/**********************************************************************************************
 				 * We search to see if there are wild pressure points, and if so we replace them with asterisks
 				 **********************************************************************************************/
@@ -170,7 +187,6 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					    if (ids.equals(6)) {
 					    	
 					    	Object isWild = record.getValueByCode(6);
-//					    	String pressure_type = record.getTitleByCode(6);
 					    	Class<?> pressure_type = record.getTypeByCode(6);
 					    	
 					    	if (pressure_type == Double.TYPE || isWild instanceof Double) {
