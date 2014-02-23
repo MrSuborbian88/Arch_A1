@@ -33,8 +33,8 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(005, Double.TYPE, "Attitude");
 
 		// This will require special behavior in the TablePrinter
-		recordDef.addFieldDefinition(006, Boolean.TYPE, "ExtrapolatedPressure");
-		recordDef.addFieldDefinition(007, Boolean.TYPE, "ExtrapolatedAltitude");
+		recordDef.addFieldDefinition(006, Double.TYPE, "ExtrapolatedPressure");
+		recordDef.addFieldDefinition(007, Double.TYPE, "ExtrapolatedAltitude");
 
 		String primaryHeader = "Time:     Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):";
 		String wildPressureHeader = "Time:     Pressure (psi):";
@@ -65,12 +65,12 @@ public class PlumberSystemC {
 		mergeFilter.Connect(secondSourceFilter, 4, 12);
 
 		altitudeFilter.Connect(mergeFilter, 13, 14);
-		wildAltitudeFilter.Connect(altitudeFilter, 31, 32);
-		sinkWildAltitude.Connect(wildAltitudeFilter, WILD_OUTPUT1, 15);
+		wildAltitudeFilter.Connect(altitudeFilter, WILD_OUTPUT1, 32);
+		sinkWildAltitude.Connect(wildAltitudeFilter, 31, 15);
 
 		pressureFilter.Connect(altitudeFilter, 16, 17);
-		wildPressureFilter.Connect(pressureFilter, 33, 34);
-		sinkWildPressure.Connect(pressureFilter, WILD_OUTPUT2, 18);
+		wildPressureFilter.Connect(pressureFilter, WILD_OUTPUT2, 34);
+		sinkWildPressure.Connect(pressureFilter, 33, 18);
 		
 		fieldFilter.Connect(pressureFilter, 22, 19);
 		sinkPrimary.Connect(fieldFilter, 23, 24);

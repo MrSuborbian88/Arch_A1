@@ -39,12 +39,10 @@ public class PlumberSystemA {
 		FileOutputStream fileOutputStream = new FileOutputStream(SystemOutputFilepath);
 		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream, header);
 
-		FToC.Connect(sourceFilter, 1, 2);
-		ftTom.Connect(FToC, 2, 3);
-		fieldFilter.Connect(ftTom, 3, 4);
-//		sinkFilter.Connect(fieldFilter, 7, 8);
-		
-		sinkFilter.Connect(fieldFilter, 5, 6);
+		FToC.Connect(sourceFilter, OUTPUT, INPUT);
+		ftTom.Connect(FToC, OUTPUT, INPUT);
+		fieldFilter.Connect(ftTom, OUTPUT, INPUT);
+		sinkFilter.Connect(fieldFilter, OUTPUT, INPUT);
 
 		sourceFilter.start();
 		FToC.start();
