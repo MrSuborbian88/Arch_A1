@@ -20,11 +20,13 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 //	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
 	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss:SSS");
 
+	String headerString;
+
 	
-	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream) {
+	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream, String headerString) {
 		super(recordDefinition);
 		this.fileOutputStream = fileOutputStream;
-		
+		this.headerString = headerString;
 		
 
 	}
@@ -55,9 +57,10 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		 **************************************************************/
 
 
-		String header = "Time:            Temperature (C):   Altitude (m): \n";
+//		String header = "Time:            Temperature (C):   Altitude (m): \n";
 		try {
-			fileOutputStream.write(header.getBytes());
+			fileOutputStream.write(headerString.getBytes());
+			fileOutputStream.write("\n".getBytes());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

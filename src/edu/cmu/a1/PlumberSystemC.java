@@ -36,6 +36,7 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(006, Boolean.TYPE, "ExtrapolatedPressure");
 		recordDef.addFieldDefinition(007, Boolean.TYPE, "ExtrapolatedAltitude");
 
+		String primaryHeader = "TEMP HEADER FIX";
 
 		FileSource firstSourceFilter = new FileSource(recordDef, InputFilepath1);
 		FileSource secondSourceFilter = new FileSource(recordDef, InputFilepath2);
@@ -51,9 +52,9 @@ public class PlumberSystemC {
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003});
 
 		
-		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream);
-		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream);
-		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream);
+		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader);
+		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, primaryHeader);
+		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, primaryHeader);
 
 		mergeFilter.Connect(firstSourceFilter, 3, 11);
 		mergeFilter.Connect(secondSourceFilter, 4, 12);
