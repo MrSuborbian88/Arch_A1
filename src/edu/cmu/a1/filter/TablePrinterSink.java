@@ -141,7 +141,9 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 	private void writeRecordToFile(Record record) throws IOException  {
 
-		for(Integer fieldID : record.getCodes())
+//		for(Integer fieldID : record.getCodes())
+		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		for(Integer fieldID : fieldOrder)
 		{
 			try {
 				Class<?> type = this.recordDefinition.getFieldType(fieldID);
