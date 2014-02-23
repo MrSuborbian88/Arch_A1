@@ -36,9 +36,9 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(006, Double.TYPE, "ExtrapolatedPressure");
 		recordDef.addFieldDefinition(007, Double.TYPE, "ExtrapolatedAltitude");
 
-		String primaryHeader = "Time:     Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):";
-		String wildPressureHeader = "Time:     Pressure (psi):";
-		String wildAltitudeHeader = "Time:     Altitude (m):";
+		String primaryHeader = "Time:                        Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):";
+		String wildPressureHeader = "Time:                        Pressure (psi):";
+		String wildAltitudeHeader = "Time:                        Altitude (m):";
 		
 		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
 		int[] wildFieldOrder = {000, 003};

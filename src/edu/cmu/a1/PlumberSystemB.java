@@ -34,8 +34,8 @@ public class PlumberSystemB {
 		recordDef.addFieldDefinition(006, Double.TYPE, "WildPressure");
 		
 		// Headers for output file
-		String primaryHeader = "Time:     Temperature (C):     Altitude (m):     Pressure (psi):";
-		String wildHeader = "Time:     Pressure (psi):";
+		String primaryHeader = "Time:                        Temperature (C):     Altitude (m):     Pressure (psi):";
+		String wildHeader = "Time:                        Pressure (psi):";
 		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
 		int[] wildFieldOrder = {000, 003};
 		
