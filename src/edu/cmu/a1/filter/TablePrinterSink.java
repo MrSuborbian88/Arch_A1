@@ -116,21 +116,8 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 
 
-	private void writeIntegerToFile(Integer value) throws IOException {
-		String valueString = value.toString();
-		fileOutputStream.write(valueString.getBytes());
-		fileOutputStream.write("\t".getBytes());	}
-
-	private void writeLongToFile(Long value) throws IOException {
-		String valueString = value.toString();
-		fileOutputStream.write(valueString.getBytes());	
-		fileOutputStream.write("\t".getBytes());	}
 
 	private void writeDoubleToFile(Double value, String significantDigits) throws IOException {
-		//		String valueString = String.format("%.5f", value);
-
-		//		String.format("%010d", Integer.parseInt(mystring));
-
 		String valueString = String.format(significantDigits, value);
 		fileOutputStream.write(valueString.getBytes());	
 		fileOutputStream.write("\t \t \t \t".getBytes());	}
@@ -140,8 +127,6 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		fileOutputStream.write("\t".getBytes());	}
 
 	private void writeRecordToFile(Record record) throws IOException  {
-
-//		for(Integer fieldID : record.getCodes())
 		
 		for(Integer fieldID : fieldOrder)
 		{
@@ -162,7 +147,6 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				}
 
 				if (fieldID == 2) { // Altitude
-					//					writeDoubleToFile((Double) value, "%04.5f");
 
 					String altitudeString = String.format("%04.5f", value);
 					for (Integer ids : fieldOrder) {
@@ -220,15 +204,11 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 				if (fieldID == 4) { // Temperature
 					
-//					Double price = 32.0;
 				    DecimalFormat decim = new DecimalFormat("000.00000");
 				    Double paddedValue = Double.parseDouble(decim.format(value));
 				    String paddedValueString = paddedValue.toString();
 				    paddedValueString += "\t \t  ";
 				    writeStringToFile(paddedValueString);
-//				    System.out.println(price2);
-					
-//					writeDoubleToFile((Double) paddedValue, "%.5f");
 
 				}
 
@@ -236,20 +216,6 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					writeDoubleToFile((Double) value, "%04.5f");
 				}
 
-				//				else if (fieldID == 6 || fieldID == 7) {
-				//					continue;
-				//				}
-
-				//				else {
-				//				if(type == Integer.TYPE)
-				//					writeIntegerToFile((Integer) value);
-				//				else if(type == Long.TYPE)
-				//					writeLongToFile((Long) value);
-				//				else if(type == Double.TYPE)
-				//					writeDoubleToFile((Double) value);
-				//				else //Default behavior?
-				//					writeDoubleToFile((Double) value);
-				//				}
 			}
 			catch (IllegalArgumentException e) {
 				//Value not found in Record object, don't write
