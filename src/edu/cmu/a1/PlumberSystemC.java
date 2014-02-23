@@ -70,7 +70,7 @@ public class PlumberSystemC {
 
 		pressureFilter.Connect(altitudeFilter, 16, 17);
 		wildPressureFilter.Connect(pressureFilter, WILD_OUTPUT2, 34);
-		sinkWildPressure.Connect(pressureFilter, 33, 18);
+		sinkWildPressure.Connect(wildPressureFilter, 33, 18);
 		
 		fieldFilter.Connect(pressureFilter, 22, 19);
 		sinkPrimary.Connect(fieldFilter, 23, 24);

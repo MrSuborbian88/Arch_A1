@@ -3,6 +3,7 @@ package edu.cmu.a1.filter;
 //Begin CFP
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -213,7 +214,13 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				}
 
 				if (fieldID == 4) {
-					writeDoubleToFile((Double) value, "%04.5f");
+					
+//					Double price = 32.0;
+				    DecimalFormat decim = new DecimalFormat("000.00000");
+				    Double paddedValue = Double.parseDouble(decim.format(value));
+//				    System.out.println(price2);
+					
+					writeDoubleToFile((Double) paddedValue, "%.5f");
 
 				}
 
