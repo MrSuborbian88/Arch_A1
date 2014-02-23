@@ -31,13 +31,16 @@ public class PlumberSystemA {
 		recordDef.addFieldDefinition(005, Double.TYPE, "Attitude");
 
 		String header = "Time:     Temperature (C):     Altitude (m):     ";
+//		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		
 		
 		FileSource sourceFilter = new FileSource(recordDef, InputFilepath);
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002});
 		FileOutputStream fileOutputStream = new FileOutputStream(SystemOutputFilepath);
-		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream, header);
+		TablePrinterSink sinkFilter = new TablePrinterSink(recordDef, fileOutputStream, header, fieldOrder);
 
 		FToC.Connect(sourceFilter, OUTPUT, INPUT);
 		ftTom.Connect(FToC, OUTPUT, INPUT);

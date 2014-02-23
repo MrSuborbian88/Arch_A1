@@ -40,6 +40,10 @@ public class PlumberSystemC {
 		String wildPressureHeader = "Time:     Pressure (psi):";
 		String wildAltitudeHeader = "Time:     Altitude (m):";
 		
+		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		int[] wildFieldOrder = {000, 003};
+		int[] under10KFieldOrder = {000, 002};
+		
 		FileSource firstSourceFilter = new FileSource(recordDef, InputFilepath1);
 		FileSource secondSourceFilter = new FileSource(recordDef, InputFilepath2);
 //		FileSource secondSourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
@@ -57,9 +61,9 @@ public class PlumberSystemC {
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 005, 006, 007});
 
 		
-		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader);
-		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, wildPressureHeader);
-		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, wildAltitudeHeader);
+		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader, primaryFieldOrder);
+		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, wildPressureHeader, wildFieldOrder);
+		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, wildAltitudeHeader, under10KFieldOrder);
 
 		mergeFilter.Connect(firstSourceFilter, 3, 11);
 		mergeFilter.Connect(secondSourceFilter, 4, 12);

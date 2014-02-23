@@ -36,7 +36,9 @@ public class PlumberSystemB {
 		// Headers for output file
 		String primaryHeader = "Time:     Temperature (C):     Altitude (m):     Pressure (psi):";
 		String wildHeader = "Time:     Pressure (psi):";
-
+		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		int[] wildFieldOrder = {000, 003};
+		
 		FileSource sourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
@@ -46,9 +48,9 @@ public class PlumberSystemB {
 		
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 006});
 		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"OutputB.dat");
-		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader);
+		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader, primaryFieldOrder);
 		FileOutputStream wildFileOutputStream = new FileOutputStream(WildFile);
-		TablePrinterSink sinkWild = new TablePrinterSink(recordDef, wildFileOutputStream, wildHeader);
+		TablePrinterSink sinkWild = new TablePrinterSink(recordDef, wildFileOutputStream, wildHeader, wildFieldOrder);
 
 		FToC.Connect(sourceFilter, OUTPUT, INPUT);
 		ftTom.Connect(FToC, OUTPUT, INPUT);

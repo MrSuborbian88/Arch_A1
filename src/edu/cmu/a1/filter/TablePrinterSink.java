@@ -22,13 +22,13 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss:SSS");
 
 	String headerString;
+	int[] fieldOrder;
 
-
-	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream, String headerString) {
+	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream, String headerString, int[] fieldOrder) {
 		super(recordDefinition);
 		this.fileOutputStream = fileOutputStream;
 		this.headerString = headerString;
-
+		this.fieldOrder = fieldOrder;
 
 	}
 
@@ -142,7 +142,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 	private void writeRecordToFile(Record record) throws IOException  {
 
 //		for(Integer fieldID : record.getCodes())
-		int[] fieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
+		
 		for(Integer fieldID : fieldOrder)
 		{
 			try {
@@ -164,7 +164,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 					//					writeDoubleToFile((Double) value, "%04.5f");
 
 					String altitudeString = String.format("%04.5f", value);
-					for (Integer ids : record.getCodes()) {
+					for (Integer ids : fieldOrder) {
 						if (ids.equals(7)) {
 
 							Object isExtrapolated = record.getValueByCode(7);
@@ -191,7 +191,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				 **********************************************************************************************/
 				if (fieldID == 3) {
 					String pressure_string = String.format("%04.5f", value);
-					for (Integer ids : record.getCodes()) {
+					for (Integer ids : fieldOrder) {
 						if (ids.equals(6)) {
 
 							Object isWild = record.getValueByCode(6);
