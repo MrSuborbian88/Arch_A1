@@ -5,15 +5,30 @@ import java.io.IOException;
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
+/******************************************************************************************************************
+ * File: TemperatureConverter.java
+ * 
+ * 
+ * Description:
+ *
+ * Converts the temperature field from celsius to fahrenheit
+ *
+ ******************************************************************************************************************/
 
 public class TemperatureConverter extends FilterFrameworkExtended{
+	/***************************************************************************
+	 *  Arguments:
+	 *  recordDefinition - The format of record messages	
+	 *  FieldID - The Field ID for temperature
+	 * 
+	 ****************************************************************************/
 
 	public TemperatureConverter(RecordDefinition recordDefinition, Integer FieldID) {
 		super(recordDefinition);
 		this.TEMPERATURE_FIELDID = FieldID;
 	}
 	private Integer TEMPERATURE_FIELDID = 4;
-	public void DoInnerWork(Record r )
+	private void DoInnerWork(Record r )
 	{
 		try {
 			double fahrenheit = 0;
@@ -38,15 +53,6 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 	public void run()
 	{
 
-
-		int bytesread = 0;					// Number of bytes read from the input file.
-		int byteswritten = 0;				// Number of bytes written to the stream.
-		byte databyte = 0;					// The byte of data read from the file
-
-		// Next we write a message to the terminal to let the world know we are alive...
-
-//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
-
 		while (this.inputsMap.size() > 0)
 		{
 			/*************************************************************
@@ -64,11 +70,9 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 				catch (EndOfStreamException e)
 				{
 					ClosePort(portID);
-//					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-//					break;
 
 				} // catch
-				catch (IOException e) {					// TODO Auto-generated catch block
+				catch (IOException e) {
 					ClosePort(portID);
 				}
 			}
@@ -76,12 +80,5 @@ public class TemperatureConverter extends FilterFrameworkExtended{
 		} // while
 
 	} // run
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

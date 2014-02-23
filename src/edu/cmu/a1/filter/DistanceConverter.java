@@ -5,16 +5,32 @@ import java.io.IOException;
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
+/******************************************************************************************************************
+ * File: DistanceConverter.java
+ * 
+ * 
+ * Description:
+ *
+ * Converts altitude measure from meters to feet
+ *
+ ******************************************************************************************************************/
 
 public class DistanceConverter extends FilterFrameworkExtended {
 
+	/***************************************************************************
+	 *  Arguments:
+	 *  recordDefinition - The format of record messages	
+	 *  FieldID - The Field ID for altitude
+	 * 
+	 ****************************************************************************/
+
 	public DistanceConverter(RecordDefinition recordDefinition, Integer FieldID) {
 		super(recordDefinition);
-		ALTITUDE_FIELDID = FieldID;
+		this.ALTITUDE_FIELDID = FieldID;
 	}
 	private Integer ALTITUDE_FIELDID = 2;
 
-	public void DoInnerWork(Record r )
+	private void DoInnerWork(Record r )
 	{
 		try {
 			double feet = 0;
@@ -24,8 +40,6 @@ public class DistanceConverter extends FilterFrameworkExtended {
 			meters = ConvertFeetWhichIsLeftoverImperialNonsenseToTheAwesomeMetricSystemMeters(feet);
 			
 			r.setValueByCode(ALTITUDE_FIELDID, meters);
-//			System.out.println("F:" + feet);
-//			System.out.println("M:" + meters);
 		} catch (IllegalArgumentException e) {
 			//No Temperature
 		}
@@ -38,20 +52,8 @@ public class DistanceConverter extends FilterFrameworkExtended {
 	public void run()
 	{
 
-
-		int bytesread = 0;					// Number of bytes read from the input file.
-		int byteswritten = 0;				// Number of bytes written to the stream.
-		byte databyte = 0;					// The byte of data read from the file
-
-		// Next we write a message to the terminal to let the world know we are alive...
-
-//		System.out.print( "\n" + this.getName() + "::Middle Reading ");
-
 		while (this.inputsMap.size() > 0)
 		{
-			/*************************************************************
-			 *	Here we read a byte and write a byte
-			 *************************************************************/
 			for(Integer portID : this.inputsMap.keySet()) {
 				try
 				{
@@ -64,25 +66,15 @@ public class DistanceConverter extends FilterFrameworkExtended {
 				catch (EndOfStreamException e)
 				{
 					ClosePort(portID);
-					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-					break;
 
 				} // catch
-				catch (IOException e) {					// TODO Auto-generated catch block
-					e.printStackTrace();
+				catch (IOException e) {	
+					ClosePort(portID);
 				}
 			}
 
 		} // while
 
 	} // run
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

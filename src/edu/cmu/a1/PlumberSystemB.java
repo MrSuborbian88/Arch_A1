@@ -39,7 +39,7 @@ public class PlumberSystemB {
 		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006};
 		int[] wildFieldOrder = {000, 003};
 		
-		FileSource sourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
+		FileSource sourceFilter = new FileSource(recordDef,InputFilepath);
 		TemperatureConverter FToC = new TemperatureConverter(recordDef, 004);
 		DistanceConverter ftTom = new DistanceConverter (recordDef, 002);
 		PressureFilter pressureFilter = new PressureFilter (recordDef, 003, 006);
@@ -47,7 +47,7 @@ public class PlumberSystemB {
 		FieldFilter wildPressureFilter = new FieldFilter(recordDef, new Integer[] {000, 003, 006});
 		
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 006});
-		FileOutputStream primaryFileOutputStream = new FileOutputStream("resources"+File.separator+"OutputB.dat");
+		FileOutputStream primaryFileOutputStream = new FileOutputStream(SystemOutputFilepath);
 		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader, primaryFieldOrder);
 		FileOutputStream wildFileOutputStream = new FileOutputStream(WildFile);
 		TablePrinterSink sinkWild = new TablePrinterSink(recordDef, wildFileOutputStream, wildHeader, wildFieldOrder);
@@ -82,9 +82,17 @@ public class PlumberSystemB {
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		String infile = "resources"+File.separator+"FlightData.dat";
+		String outfile1 = "OutputB.dat";
+		String outfile2 = "WildPoints.dat";
+//		String outfile1 = "resources"+File.separator+"OutputB.dat";
+//		String outfile2 = "resources"+File.separator+"WildPoints.dat";
 		if(args.length > 0)
 			infile = (args[0]);
-		SystemB(infile,"resources"+File.separator+"outB.dat","resources"+File.separator+"WildPoints.dat");
+		System.out.println("Starting System B with: " + infile);
+
+		SystemB(infile,outfile1,outfile2);
+
+		System.out.println("System B finished. Result files: " + outfile1 + "  " + outfile2);
 	}
 
 }

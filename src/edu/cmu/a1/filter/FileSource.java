@@ -12,10 +12,6 @@ package edu.cmu.a1.filter;
 * This class serves as an example for how to use the SourceFilterTemplate to create a source filter. This particular
 * filter is a source filter that reads some input from the FlightData.dat file and writes the bytes up stream.
 *
-* Parameters: 		None
-*
-* Internal Methods: None
-*
 ******************************************************************************************************************/
 
 import java.io.DataInputStream;
@@ -30,8 +26,13 @@ import edu.cmu.a1.base.RecordDefinition;
 public class FileSource extends FilterFrameworkExtended
 {
 	private String fileName;  	// Input data file.
+	/***************************************************************************
+	 *  Arguments:
+	 *  recordDef - The format of record messages	
+	 *  Filepath - The path to a file
+	 * 
+	 ****************************************************************************/
 	public FileSource(RecordDefinition recordDef, String Filepath) {
-		// TODO Auto-generated constructor stub
 		super(recordDef);
 		this.fileName = Filepath;
 		
@@ -50,7 +51,7 @@ public class FileSource extends FilterFrameworkExtended
 			***********************************************************************************/
 
 			in = new DataInputStream(new FileInputStream(fileName));
-			System.out.println("\n" + this.getName() + "::Source reading file..." );
+//			System.out.println("\n" + this.getName() + "::Source reading file..." );
 
 			/***********************************************************************************
 			*	Here we read the data from the file and send it out the filter's output port one
@@ -74,12 +75,12 @@ public class FileSource extends FilterFrameworkExtended
 
 		catch ( EOFException eoferr )
 		{
-			System.out.println("\n" + this.getName() + "::End of file reached..." );
+//			System.out.println("\n" + this.getName() + "::End of file reached..." );
 			try
 			{
 				in.close();
 				ClosePorts();
-				System.out.println( "\n" + this.getName() + "::Read file complete, bytes read::" + bytesread + " bytes written: " + byteswritten );
+//				System.out.println( "\n" + this.getName() + "::Read file complete, bytes read::" + bytesread + " bytes written: " + byteswritten );
 
 			}
 		/***********************************************************************************
@@ -87,7 +88,7 @@ public class FileSource extends FilterFrameworkExtended
 		***********************************************************************************/
 			catch (Exception closeerr)
 			{
-				System.out.println("\n" + this.getName() + "::Problem closing input data file::" + closeerr);
+//				System.out.println("\n" + this.getName() + "::Problem closing input data file::" + closeerr);
 
 			} // catch
 
@@ -99,7 +100,7 @@ public class FileSource extends FilterFrameworkExtended
 
 		catch ( IOException iox )
 		{
-			System.out.println("\n" + this.getName() + "::Problem reading input data file::" + iox );
+//			System.out.println("\n" + this.getName() + "::Problem reading input data file::" + iox );
 
 		} // catch
 
