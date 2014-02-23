@@ -24,10 +24,9 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 	String headerString;
 	int[] fieldOrder;
 
-	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream, String headerString, int[] fieldOrder) {
+	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream, int[] fieldOrder) {
 		super(recordDefinition);
 		this.fileOutputStream = fileOutputStream;
-		this.headerString = headerString;
 		this.fieldOrder = fieldOrder;
 
 	}
@@ -53,14 +52,37 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 		int id;							// This is the measurement id
 		int i;							// This is a loop counter
 
+		
+		
 		/*************************************************************
-		 *	First we announce to the world that we are alive...
+		 *	Print the header to the output file
 		 **************************************************************/
-
-
-		//		String header = "Time:            Temperature (C):   Altitude (m): \n";
 		try {
-			fileOutputStream.write(headerString.getBytes());
+			
+			String header = "";
+			for(Integer fieldID : fieldOrder)
+			{
+			
+				if (fieldID == 0) {
+					header += "Time:                        "; }
+				
+				if (fieldID == 1) {
+					header += "Velocity (kts):         "; }
+				
+				if (fieldID == 2) {
+					header += "Altitude (m):       "; }
+				
+				if (fieldID == 3) {
+					header += "Pressure (psi):     "; }
+				
+				if (fieldID == 4) {
+					header += "Temperature (C):   "; }
+				
+				if (fieldID == 5) {
+					header += "Attitude (deg):      "; }
+			
+			}
+			fileOutputStream.write(header.getBytes());
 			fileOutputStream.write("\n".getBytes());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

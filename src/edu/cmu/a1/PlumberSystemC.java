@@ -36,9 +36,6 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(006, Double.TYPE, "ExtrapolatedPressure");
 		recordDef.addFieldDefinition(007, Double.TYPE, "ExtrapolatedAltitude");
 
-		String primaryHeader = "Time:                        Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):      Velocity (kts):";
-		String wildPressureHeader = "Time:                        Pressure (psi):";
-		String wildAltitudeHeader = "Time:                        Altitude (m):";
 		
 		int[] primaryFieldOrder = {000, 004, 002, 003, 001, 005, 006, 007};
 		int[] wildFieldOrder = {000, 003};
@@ -61,9 +58,9 @@ public class PlumberSystemC {
 		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 005, 001, 006, 007});
 
 		
-		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader, primaryFieldOrder);
-		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, wildPressureHeader, wildFieldOrder);
-		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, wildAltitudeHeader, under10KFieldOrder);
+		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryFieldOrder);
+		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, wildFieldOrder);
+		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, under10KFieldOrder);
 
 		mergeFilter.Connect(firstSourceFilter, 3, 11);
 		mergeFilter.Connect(secondSourceFilter, 4, 12);
