@@ -46,8 +46,11 @@ public class PlumberSystemC {
 
 		TimeMerge mergeFilter = new TimeMerge(recordDef, 000);
 		AltitudeFilter altitudeFilter = new AltitudeFilter(recordDef, 002, 007);
+		FieldFilter wildAltitudeFilter = new FieldFilter(recordDef, new Integer[] {000, 002, 007});
+		
 		PressureFilter pressureFilter = new PressureFilter (recordDef, 003, 006);
-
+		FieldFilter wildPressureFilter = new FieldFilter(recordDef, new Integer[] {000, 003, 006});
+		
 		FileOutputStream primaryFileOutputStream = new FileOutputStream(SystemOutputFilepath);
 		FileOutputStream wildPressureFileOutputStream = new FileOutputStream(WildFile1);
 		FileOutputStream wildAltitudeFileOutputStream = new FileOutputStream(WildFile2);
@@ -62,9 +65,11 @@ public class PlumberSystemC {
 		mergeFilter.Connect(secondSourceFilter, 4, 12);
 
 		altitudeFilter.Connect(mergeFilter, 13, 14);
-		sinkWildAltitude.Connect(altitudeFilter, WILD_OUTPUT1, 15);
+		wildAltitudeFilter.Connect(altitudeFilter, 31, 32);
+		sinkWildAltitude.Connect(wildAltitudeFilter, WILD_OUTPUT1, 15);
 
 		pressureFilter.Connect(altitudeFilter, 16, 17);
+		wildPressureFilter.Connect(pressureFilter, 33, 34);
 		sinkWildPressure.Connect(pressureFilter, WILD_OUTPUT2, 18);
 		
 		fieldFilter.Connect(pressureFilter, 22, 19);
@@ -74,7 +79,9 @@ public class PlumberSystemC {
 		secondSourceFilter.start();
 		mergeFilter.start();
 		altitudeFilter.start();
+		wildAltitudeFilter.start();
 		pressureFilter.start();
+		wildPressureFilter.start();
 		fieldFilter.start();
 		sinkPrimary.start();
 		sinkWildPressure.start();
