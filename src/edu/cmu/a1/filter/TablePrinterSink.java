@@ -184,6 +184,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 							}
 						}
 					}
+					altitudeString += "\t \t";
 					writeStringToFile(altitudeString);
 				}
 
@@ -213,6 +214,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 						}
 					}
+					pressure_string += "\t \t";
 					writeStringToFile(pressure_string);
 				}
 
@@ -222,7 +224,7 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 				    DecimalFormat decim = new DecimalFormat("000.00000");
 				    Double paddedValue = Double.parseDouble(decim.format(value));
 				    String paddedValueString = paddedValue.toString();
-				    paddedValueString += "\t";
+				    paddedValueString += "\t \t  ";
 				    writeStringToFile(paddedValueString);
 //				    System.out.println(price2);
 					
