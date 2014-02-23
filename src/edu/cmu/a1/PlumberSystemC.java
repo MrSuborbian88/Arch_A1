@@ -36,8 +36,10 @@ public class PlumberSystemC {
 		recordDef.addFieldDefinition(006, Boolean.TYPE, "ExtrapolatedPressure");
 		recordDef.addFieldDefinition(007, Boolean.TYPE, "ExtrapolatedAltitude");
 
-		String primaryHeader = "TEMP HEADER FIX";
-
+		String primaryHeader = "Time:     Temperature (C):     Altitude (m):     Pressure (psi):     Attitude (deg):";
+		String wildPressureHeader = "Time:     Pressure (psi):";
+		String wildAltitudeHeader = "Time:     Altitude (m):";
+		
 		FileSource firstSourceFilter = new FileSource(recordDef, InputFilepath1);
 		FileSource secondSourceFilter = new FileSource(recordDef, InputFilepath2);
 //		FileSource secondSourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
@@ -49,12 +51,12 @@ public class PlumberSystemC {
 		FileOutputStream primaryFileOutputStream = new FileOutputStream(SystemOutputFilepath);
 		FileOutputStream wildPressureFileOutputStream = new FileOutputStream(WildFile1);
 		FileOutputStream wildAltitudeFileOutputStream = new FileOutputStream(WildFile2);
-		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003});
+		FieldFilter fieldFilter = new FieldFilter(recordDef, new Integer[] {000, 004, 002, 003, 005, 006, 007});
 
 		
 		TablePrinterSink sinkPrimary = new TablePrinterSink(recordDef, primaryFileOutputStream, primaryHeader);
-		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, primaryHeader);
-		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, primaryHeader);
+		TablePrinterSink sinkWildPressure = new TablePrinterSink(recordDef, wildPressureFileOutputStream, wildPressureHeader);
+		TablePrinterSink sinkWildAltitude = new TablePrinterSink(recordDef, wildAltitudeFileOutputStream, wildAltitudeHeader);
 
 		mergeFilter.Connect(firstSourceFilter, 3, 11);
 		mergeFilter.Connect(secondSourceFilter, 4, 12);
