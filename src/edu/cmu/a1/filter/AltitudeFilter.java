@@ -5,6 +5,15 @@ import java.io.IOException;
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
+/******************************************************************************************************************
+ * File: AltitudeFilter.java
+ * 
+ * 
+ * Description:
+ *
+ * Filters out altitudes below 10,000 to a special "wild stream"
+ *
+ ******************************************************************************************************************/
 
 public class AltitudeFilter extends FilterFrameworkExtended {
 
@@ -16,6 +25,16 @@ public class AltitudeFilter extends FilterFrameworkExtended {
 	private Double WILDPOINT = 1.0;
 	private Double UNWILDPOINT = 0.0;
 
+	/***************************************************************************
+	 *  Arguments:
+	 *  recordDefinition - The format of record messages	
+	 *  FieldID - The Field ID for altitude
+	 *  WildIndicatorPortId - The Field ID of the field in the record to mark 
+	 *  						whether the value meets the criteria (less than 10k)
+	 *  						 & the Output Stream reference port to write to 
+	 * 
+	 ****************************************************************************/
+
 	public AltitudeFilter(RecordDefinition recordDefinition, Integer FieldID, Integer WildIndicatorPortId)
 	{
 		super(recordDefinition);
@@ -23,7 +42,7 @@ public class AltitudeFilter extends FilterFrameworkExtended {
 		this.WILD_ID=WildIndicatorPortId;
 		this.wildPort=WildIndicatorPortId;
 	}
-	public boolean DoInnerWork(Record record )
+	private boolean DoInnerWork(Record record )
 	{
 		try {
 
@@ -44,32 +63,22 @@ public class AltitudeFilter extends FilterFrameworkExtended {
 	}
 	public void run()
 	{
-
-
-		int bytesread = 0;					// Number of bytes read from the input file.
-		int byteswritten = 0;				// Number of bytes written to the stream.
-		byte databyte = 0;					// The byte of data read from the file
-
-		// Next we write a message to the terminal to let the world know we are alive...
-
-		//	System.out.print( "\n" + this.getName() + "::Middle Reading ");
-
 		while (this.inputsMap.size() > 0)
 		{
-			/*************************************************************
-			 *	Here we read a byte and write a byte
-			 *************************************************************/
 			for(Integer portID : this.inputsMap.keySet()) {
 				try
 				{
+					//Read in records
 					Record record = readNextRecord(portID);
 					boolean greaterthan10k = DoInnerWork(record);
+					//>= 10k altitude, write to all output streams (except the wild stream)
 					if(greaterthan10k)
 					{
 						for(Integer outID : this.outputsMap.keySet())
 							if(outID != this.wildPort)
 								writeRecord(outID,record);
 					}
+					//<10k altitude , write to the "wild" output stream
 					else
 					{
 						writeRecord(this.wildPort,record);
@@ -80,11 +89,9 @@ public class AltitudeFilter extends FilterFrameworkExtended {
 				catch (EndOfStreamException e)
 				{
 					ClosePort(portID);
-					//					System.out.print( "\n" + this.getName() + "::Middle Exiting; bytes read: " + bytesread + " bytes written: " + byteswritten );
-					break;
 
 				} // catch
-				catch (IOException e) {					// TODO Auto-generated catch block
+				catch (IOException e) {
 					ClosePort(portID);
 				}
 			}

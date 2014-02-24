@@ -15,6 +15,15 @@ package edu.cmu.a1.base;
 ******************************************************************************************************************/
 import java.util.HashMap;
 
+/******************************************************************************************************************
+ * File:Record.java
+ *
+ * Description:
+ *
+ * This is the instantiation of a RecordDefinition, which defines the format of a record
+ *
+ ******************************************************************************************************************/
+
 public class Record
 {
 	private HashMap<Integer,Object> valueMap;
@@ -26,8 +35,6 @@ public class Record
 		this.recordDefinition=recordDefinition;
 		valueMap = new HashMap<Integer,Object>();
 		
-		//for(Integer code : recordDefinition.getFieldCodes())
-		//	valueMap.put(code, null);
 		
 	}
 	// Main provides a primitive incomplete standalone unit test.
@@ -44,6 +51,7 @@ public class Record
 
 
 		Record record = new Record(recordDef);
+		//Should have all fields and no values
 		System.out.println(record);
 		
 		record.setValueByCode(0,1);
@@ -53,10 +61,9 @@ public class Record
 		record.setValueByCode(4,1);
 		record.setValueByCode(5,1);
 		
+		//Should have all fields the fields set now
 		System.out.println(record);
-//		System.out.println(record.toColumns());
 
-		System.out.println("Done");
 	}
 
 	// Getters
@@ -68,11 +75,6 @@ public class Record
 			throw new IllegalArgumentException("Code not in record.");
 	}
 
-	public void setValueByCode(Integer code, Object value)
-	{
-		this.valueMap.put(code, value);
-	}
-	
 	public Integer [] getCodes() {
 		return this.recordDefinition.getFieldCodes();
 	}
@@ -83,6 +85,13 @@ public class Record
 	public String getTitleByCode(Integer code) {
 		return this.recordDefinition.getFieldTitle(code);
 	}
+	
+	//Setter
+	public void setValueByCode(Integer code, Object value)
+	{
+		this.valueMap.put(code, value);
+	}
+	
 	@Override
 	public String toString()
 	{
@@ -104,25 +113,4 @@ public class Record
 		return str;
 	}
 	
-	/*
-	// Left to the team...
-	//public toByteStream
-	
-	public String toColumns()
-	{
-		SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss.SSS");
-		return	String.format("%s, %16.6f, %16.6f, %16.6f, %16.6f, %16.6f", 
-				TimeStampFormat.format(time_),
-		 		velocity_, altitude_, temperature_, pressure_, attitude_);
-	}
-
-
-	// We always have time!
-	protected long time_ = 0;
-	protected Double velocity_ = null;
-	protected Double altitude_ = null;
-	protected Double temperature_ = null;
-	protected Double pressure_ = null;
-	protected Double attitude_ = null;
-	*/
 }

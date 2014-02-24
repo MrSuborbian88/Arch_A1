@@ -1,6 +1,5 @@
 package edu.cmu.a1.filter;
 
-//Begin CFP
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -10,19 +9,27 @@ import java.util.Calendar;
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
-// This class is used to interpret time words
-//End CFP
+/******************************************************************************************************************
+ * File: TablePrinterSink.java
+ * 
+ * 
+ * Description:
+ *
+ * Writes the record objects from the input streams to a text file.
+ *
+ ******************************************************************************************************************/
 
 public class TablePrinterSink extends FilterFrameworkExtended {
 
 	private FileOutputStream fileOutputStream;
 
-	Calendar TimeStamp = null;
+	private Calendar TimeStamp = null;
 	//	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy MM dd::hh:mm:ss:SSS");
-	SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss:SSS");
+	private SimpleDateFormat TimeStampFormat = new SimpleDateFormat("yyyy:MM:dd:hh:mm:ss:SSS");
 
-	String headerString;
-	int[] fieldOrder;
+	private String headerString;
+	//Order in which to write the fields to file
+	private int[] fieldOrder;
 
 	public TablePrinterSink(RecordDefinition recordDefinition,	FileOutputStream fileOutputStream, int[] fieldOrder) {
 		super(recordDefinition);
@@ -245,15 +252,6 @@ public class TablePrinterSink extends FilterFrameworkExtended {
 
 		}
 		fileOutputStream.write("\n".getBytes());
-
-	}
-
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
 

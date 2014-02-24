@@ -5,19 +5,37 @@ import java.util.HashMap;
 import edu.cmu.a1.base.FilterFrameworkExtended;
 import edu.cmu.a1.base.Record;
 import edu.cmu.a1.base.RecordDefinition;
+/******************************************************************************************************************
+ * File: TimeMerge.java
+ * 
+ * 
+ * Description:
+ *
+ * Combines multiple input streams, ordering them chronologically by a record's time field
+ *
+ ******************************************************************************************************************/
 
 public class TimeMerge extends FilterFrameworkExtended {
 
 	private Integer TIME_FIELDID;
 	private HashMap<Integer,Record> recordMap;
+	/***************************************************************************
+	 *  Arguments:
+	 *  recordDefinition - The format of record messages	
+	 *  FieldID - The Field ID for the timestamp
+	 * 
+	 ****************************************************************************/
 	public TimeMerge(RecordDefinition recordDefinition, Integer FieldID) {
 		super(recordDefinition);
 		TIME_FIELDID = FieldID;
 		this.recordMap = new HashMap<Integer,Record>();
 	}
+	
+	//Read a record from each input stream that does not have a record in our map
 	private void UpdateMap() {
 		Integer[] keys = this.inputsMap.keySet().toArray(new Integer [this.inputsMap.size()]);
 		for(Integer portID : keys) {
+			//Find input streams that don't have a record in our local map
 			if(!this.recordMap.containsKey(portID)) {
 				//Read records until one has a time field
 				while(true) {
@@ -39,7 +57,8 @@ public class TimeMerge extends FilterFrameworkExtended {
 		}
 
 	}
-	public Record FindAndRemoveLowestRecord() {
+	//Find the record with the lowest time value and remove/return it
+	private Record FindAndRemoveLowestRecord() {
 		long lowest_record = -1;
 		Integer lowest_record_id = -1;
 		for(Integer id : this.recordMap.keySet()) {
@@ -73,17 +92,8 @@ public class TimeMerge extends FilterFrameworkExtended {
 					writeRecord(portID,record);
 				}
 
-
-
 		} // while
 
 	} // run
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

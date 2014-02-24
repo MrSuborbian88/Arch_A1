@@ -43,7 +43,6 @@ public class PlumberSystemC {
 		
 		FileSource firstSourceFilter = new FileSource(recordDef, InputFilepath1);
 		FileSource secondSourceFilter = new FileSource(recordDef, InputFilepath2);
-//		FileSource secondSourceFilter = new FileSource(recordDef, "resources"+File.separator+"FlightData.dat");
 
 		TimeMerge mergeFilter = new TimeMerge(recordDef, 000);
 		AltitudeFilter altitudeFilter = new AltitudeFilter(recordDef, 002, 007);
@@ -98,12 +97,23 @@ public class PlumberSystemC {
 		String infile1 = "resources"+File.separator+"SubSetA-2009.dat";
 		String infile2 = "resources"+File.separator+"SubSetB-2009.dat";
 //		String infile2 = "resources"+File.separator+"FlightData.dat";
+		
+		String outfile1 = "OutputC.dat";
+		String outfile2 = "PressureWildPoints.dat";
+		String outfile3 = "LessThan10K.dat";
+		
+//		String outfile1 = "resources"+File.separator+"OutputC.dat";
+//		String outfile2 = "resources"+File.separator+"PressureWildPoints.dat";
+//		String outfile3 = "resources"+File.separator+"LessThan10K.dat";
+		
 		if(args.length > 0)
 			infile1 = (args[0]);
 		if(args.length > 1)
 			infile2 = (args[1]);
-		SystemC(infile1,infile2,"resources"+File.separator+"OutputC.dat","resources"+File.separator+"PressureWildPoints.dat","resources"+File.separator+"LessThan10K.dat");
-
+		
+		System.out.println("Starting System C with: " + infile1 + " " + infile2);
+		SystemC(infile1,infile2,outfile1,outfile2,outfile3);
+		System.out.println("System C finished. Result files: " + outfile1 + " " + outfile2 + " " + outfile3);
 	}
 
 }

@@ -7,7 +7,7 @@ Assignment 1 Repo
 ##Instructions to compile (Windows):
 >cd ::root of project:: 
 
->javac -d bin -sourcep::h src src\edu\cmu\a1\PlumberSystemA.java 
+>javac -d bin -sourcepath src src\edu\cmu\a1\PlumberSystemA.java 
 
 >javac -d bin -sourcepath src src\edu\cmu\a1\PlumberSystemB.java 
 

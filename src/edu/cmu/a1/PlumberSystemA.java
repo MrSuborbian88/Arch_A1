@@ -59,10 +59,13 @@ public class PlumberSystemA {
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
 		String infile = "resources"+File.separator+"FlightData.dat";
+//		String outfile = "resources"+File.separator+"OutputA.dat";
+		String outfile = "OutputA.dat";
 		if(args.length > 0)
 			infile = args[0];
-		
-		SystemA(infile,"resources"+File.separator+"OutputA.dat");
+		System.out.println("Starting System A with: " + infile);
+		SystemA(infile,outfile);
+		System.out.println("System A finished. Result file: " + outfile);
 	}
 
 }
