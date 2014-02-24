@@ -3,6 +3,8 @@ Arch_A1
 
 Assignment 1 Repo
 
+Team Members: Micah Lee, Keith Lindsey Jr, Daniel Souza, Christine Parry
+
 
 ##Instructions to compile (Windows):
 >cd ::root of project:: 
