@@ -29,15 +29,15 @@ Assignment 1 Repo
 ##Instructions to run A:
 >cd ::root of project::
 
->java bin.edu.cmu.a1.PlumberSystemA ::Path to FlightData.dat::
+>java -cp ./bin edu.cmu.a1.PlumberSystemA ::Path to FlightData.dat::
 
 ##Instructions to run B:
 >cd ::root of project::
 
->java bin.edu.cmu.a1.PlumberSystemB ::Path to FlightData.dat::
+>java -cp ./bin edu.cmu.a1.PlumberSystemB ::Path to FlightData.dat::
 
 ##Instructions to run C:
 >cd ::root of project::
 
->java bin.edu.cmu.a1.PlumberSystemC ::Path to FlightData1.dat:: ::Path to FlightData2.dat::
+>java -cp ./bin edu.cmu.a1.PlumberSystemC ::Path to FlightData1.dat:: ::Path to FlightData2.dat::
 
